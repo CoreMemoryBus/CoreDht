@@ -1,5 +1,4 @@
 ﻿using System;
-using CoreDht.Node;
 using NetMQ;
 
 namespace FirstExample
@@ -19,11 +18,5 @@ namespace FirstExample
             var theApp = new Program();
             theApp.Run(args);
         }
-    }
-
-    public class MyAppNode : Node
-    {
-        public MyAppNode(string binding, Action<string> logger) : base(binding, logger)
-        { }
     }
 }
