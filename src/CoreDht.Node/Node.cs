@@ -2,7 +2,7 @@
 using NetMQ;
 using NetMQ.Sockets;
 
-namespace FirstExample
+namespace CoreDht.Node
 {
     public class Node
     {
