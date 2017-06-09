@@ -4,7 +4,7 @@ using NetMQ.Sockets;
 
 namespace CoreDht.Node
 {
-    public class Node
+    public class Node : IDisposable
     {
         protected Action<string> Logger { get; }
         protected DealerSocket ListeningSocket { get; }
@@ -48,8 +48,38 @@ namespace CoreDht.Node
                     Poller.Stop();
                     Logger?.Invoke($"Node terminating.");
                     break;
-
             }
         }
+
+        #region IDisposable Support
+
+        private bool _isDisposed = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    if (Poller.IsRunning)
+                    {
+                        Poller.Stop();
+                    }
+                    Poller.Dispose();
+                    Actor.Dispose();
+                    ListeningSocket.Dispose();
+                    // this wont scale!!
+                }
+
+                _isDisposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        #endregion
     }
 }
