@@ -8,44 +8,22 @@ namespace CoreDht.Node
     {
         protected Action<string> Logger { get; }
         protected DealerSocket ListeningSocket { get; }
-        protected NetMQPoller Poller { get; set; }
-        private PairSocket Shim { get; set; }
+        protected NodeActor Actor { get; }
 
         protected Node(string binding, Action<string> logger)
         {
             Logger = logger;
             ListeningSocket = new DealerSocket(binding);
-            Poller = new NetMQPoller();
-            Actor = CreateActor();
+            Actor = new NodeActor(ListeningSocket, OnReceiveMsg, (socket, ex) => {});
         }
 
-        public NetMQActor Actor { get; }
-
-        private NetMQActor CreateActor()
+        void OnReceiveMsg(NetMQMessage msg)
         {
-            return NetMQActor.Create(shim =>
-            {
-                Shim = shim;
-                Shim.ReceiveReady += ShimOnReceiveReady;
-                Shim.SignalOK();
-
-                Poller.Add(Shim);
-                Poller.Add(ListeningSocket);
-                Poller.Run();
-
-                Logger?.Invoke("Node closed");
-            });
-        }
-
-
-        private void ShimOnReceiveReady(object sender, NetMQSocketEventArgs args)
-        {
-            var mqMsg = args.Socket.ReceiveMultipartMessage();
-            var typeCode = mqMsg[0].ConvertToString();
+            var typeCode = msg[0].ConvertToString();
             switch (typeCode)
             {
                 case NetMQActor.EndShimMessage:
-                    Poller.Stop();
+                    Actor.Stop();
                     Logger?.Invoke($"Node terminating.");
                     break;
             }
@@ -61,14 +39,12 @@ namespace CoreDht.Node
             {
                 if (disposing)
                 {
-                    if (Poller.IsRunning)
+                    if (Actor.IsRunning)
                     {
-                        Poller.Stop();
+                        Actor.Stop();
                     }
-                    Poller.Dispose();
                     Actor.Dispose();
                     ListeningSocket.Dispose();
-                    // this wont scale!!
                 }
 
                 _isDisposed = true;
