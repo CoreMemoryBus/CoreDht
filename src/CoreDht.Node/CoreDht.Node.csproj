@@ -66,7 +66,9 @@
     <Compile Include="Node.cs" />
     <Compile Include="NodeActor.cs" />
     <Compile Include="NodeInfo.cs" />
+    <Compile Include="OutgoingSocket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SocketCache.cs" />
     <Compile Include="TcpNodeSocketFactory.cs" />
   </ItemGroup>
   <ItemGroup>
