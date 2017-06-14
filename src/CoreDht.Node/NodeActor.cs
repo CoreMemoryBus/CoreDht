@@ -8,7 +8,7 @@ namespace CoreDht.Node
     /// <summary>
     /// Encapsulate all the actor boilerplate into something re-usable.
     /// </summary>
-    public class NodeActor : IDisposable, IReceivingSocket
+    public class NodeActor : INodeActor, IDisposable
     {
         private readonly NetMQSocket _listeningSocket;
         private readonly Action<NetMQMessage> _mqMessageHandler;
@@ -66,6 +66,11 @@ namespace CoreDht.Node
         public bool TryReceive(ref Msg msg, TimeSpan timeout)
         {
             return _actor.TryReceive(ref msg, timeout);
+        }
+
+        public bool TrySend(ref Msg msg, TimeSpan timeout, bool more)
+        {
+            return _actor.TrySend(ref msg, timeout, more);
         }
 
         #region IDisposable Support

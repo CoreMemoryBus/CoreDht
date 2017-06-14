@@ -23,10 +23,10 @@ namespace CoreDht.Node
             Socket = socket;
         }
 
-        public OutgoingSocket(NetMQActor socket, IUtcClock clock)
+        public OutgoingSocket(INodeActor actorSocket, IUtcClock clock)
         {
             _clock = clock;
-            Socket = socket;
+            Socket = actorSocket;
             _isDisposed = true; // Actor is not owned by the cache
         }
 

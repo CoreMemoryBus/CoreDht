@@ -61,8 +61,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="INodeActor.cs" />
     <Compile Include="INodeSocketFactory.cs" />
     <Compile Include="InProcNodeSocketFactory.cs" />
+    <Compile Include="ISocketCache.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="NodeActor.cs" />
     <Compile Include="NodeInfo.cs" />
