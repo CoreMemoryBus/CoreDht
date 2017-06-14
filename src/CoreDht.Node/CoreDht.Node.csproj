@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IMessageBus.cs" />
     <Compile Include="INodeActor.cs" />
     <Compile Include="INodeSocketFactory.cs" />
     <Compile Include="InProcNodeSocketFactory.cs" />

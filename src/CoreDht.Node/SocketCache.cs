@@ -64,7 +64,7 @@ namespace CoreDht.Node
         /// <param name="hostAndPort">local identity host and port</param>
         /// <param name="actor">The actor socket instance for the host</param>
         /// 
-        public void AddActor(string hostAndPort, NetMQActor actor)
+        public void AddActor(string hostAndPort, INodeActor actor)
         {
             this.Cache.Add(hostAndPort, new OutgoingSocket(actor, _clock));
         }

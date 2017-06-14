@@ -7,5 +7,7 @@ namespace FirstExample
     {
         public MyAppNode(string binding, Action<string> logger) : base(binding, logger)
         { }
+
+        public new NodeActor Actor => base.Actor;
     }
 }
