@@ -93,6 +93,7 @@ namespace CoreDht.Node
 
         public void Dispose()
         {
+            _poller.Stop();
             Dispose(true);
         }
 
