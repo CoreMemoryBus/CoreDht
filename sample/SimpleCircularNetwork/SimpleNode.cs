@@ -1,5 +1,6 @@
 ﻿using System;
 using CoreDht.Node;
+using CoreMemoryBus.Messages;
 using NetMQ;
 using NetMQ.Sockets;
 
@@ -22,9 +23,9 @@ namespace SimpleCircularNetwork
             _actor = new NodeActor(_listeningSocket, MessageHandler);
         }
 
-        private void MessageHandler(NetMQMessage obj)
+        private void MessageHandler(NetMQMessage mqMsg)
         {
-            
+           // mqMsg[0].Buffer
         }
 
         #region IDisposable Support
@@ -41,5 +42,15 @@ namespace SimpleCircularNetwork
             disposedValue = true;
         }
         #endregion
+
+        public class CommunicationManager
+        {
+            public void Send(Message msg)
+            { }
+
+            public void Receive(NetMQMessage msg)
+            {
+            }
+        }
     }
 }
