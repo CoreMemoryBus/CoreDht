@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreDht.Utils.Test", "test\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirstExample", "sample\FirstExample\FirstExample.csproj", "{A3E6D96D-7C78-40D9-A6B6-923D8E94E32A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{AEB1E619-36D5-4E30-8057-1C9939FE6080}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCircularNetwork", "sample\SimpleCircularNetwork\SimpleCircularNetwork.csproj", "{6D5421E1-A5B7-450B-A986-8DD4DFE3A203}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,8 +43,16 @@ Global
 		{A3E6D96D-7C78-40D9-A6B6-923D8E94E32A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3E6D96D-7C78-40D9-A6B6-923D8E94E32A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3E6D96D-7C78-40D9-A6B6-923D8E94E32A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D5421E1-A5B7-450B-A986-8DD4DFE3A203}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D5421E1-A5B7-450B-A986-8DD4DFE3A203}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D5421E1-A5B7-450B-A986-8DD4DFE3A203}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D5421E1-A5B7-450B-A986-8DD4DFE3A203}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A3E6D96D-7C78-40D9-A6B6-923D8E94E32A} = {AEB1E619-36D5-4E30-8057-1C9939FE6080}
+		{6D5421E1-A5B7-450B-A986-8DD4DFE3A203} = {AEB1E619-36D5-4E30-8057-1C9939FE6080}
 	EndGlobalSection
 EndGlobal
