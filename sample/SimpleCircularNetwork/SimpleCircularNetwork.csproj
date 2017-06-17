@@ -63,7 +63,7 @@
   <ItemGroup>
     <Compile Include="Animal.cs" />
     <Compile Include="AnimalRepository.cs" />
-    <Compile Include="Data.cs" />
+    <Compile Include="Keys.cs" />
     <Compile Include="Messages\DisplayDomain.cs" />
     <Compile Include="Messages\FeedAnimal.cs" />
     <Compile Include="Messages\Terminate.cs" />

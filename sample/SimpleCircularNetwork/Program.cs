@@ -6,6 +6,13 @@ using SimpleCircularNetwork.Messages;
 
 namespace SimpleCircularNetwork
 {
+    /// <summary>
+    /// In this example we use a trivial consistent hash (EightBitHashingService) to route messages through a simple circular network.
+    /// When a message meets its target, it changes the state of that node. In this case we're "feeding animals" where specific animals
+    /// are consistently created and fed in specific nodes. <br>
+    /// The network is constructed externally and messages are routed in a simple circular fashion. We have a DHT, but it does not route
+    /// efficiently, nor is it resilient or elastic.
+    /// </summary>
     class Program
     {
         private readonly IConsistentHashingService _hashingService;
@@ -24,10 +31,37 @@ namespace SimpleCircularNetwork
                 // Tell each node to display it's address domain
                 nodes.ForEach(n => n.SendToNode(new DisplayDomain()));
 
-                var sampleNode = nodes[0];
-                var routingId = _hashingService.GetConsistentHash("Armadillo");
-                sampleNode.SendToNetwork(new FeedAnimal(routingId, "Armadillo") { Meals = 2 });
-                sampleNode.SendToNetwork(new FeedAnimal(routingId, "Armadillo") { Meals = 3 });
+                Console.ReadKey();
+
+                // Pick any node on the network as our entry point
+                var sampleNode = nodes[3];
+
+                // Feed the animals
+                // Observe that messages are consistently routed to the same object within each node on the network.
+                var routingId = _hashingService.GetConsistentHash(Keys.Armadillo);
+                Console.WriteLine($"{Keys.Armadillo} Id:{(int)routingId.Bytes[0]}");
+                // Observe that the state of the animal object is changed. 
+                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Armadillo) { Meals = 2 });
+                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Armadillo) { Meals = 3 });
+
+                routingId = _hashingService.GetConsistentHash(Keys.Yak);
+                Console.WriteLine($"{Keys.Yak} Id:{(int)routingId.Bytes[0]}");
+                // Observe that the state of the animal object is changed
+                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Yak) { Meals = 3 });
+                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Yak) { Meals = 1 });
+
+                // Note how Coyote exists on the same node as Yak, but the states are never mixed up.
+                routingId = _hashingService.GetConsistentHash(Keys.Coyote);
+                Console.WriteLine($"{Keys.Coyote} Id:{(int)routingId.Bytes[0]}");
+                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Coyote) { Meals = 2 });
+                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Coyote) { Meals = 6 });
+
+                // Feed all the animals
+                //foreach (var animal in Keys.Animals)
+                //{
+                //    routingId = _hashingService.GetConsistentHash(animal);
+                //    sampleNode.SendToNetwork(new FeedAnimal(routingId, animal) { Meals = 1 });
+                //}
 
                 Console.ReadKey();
             }
