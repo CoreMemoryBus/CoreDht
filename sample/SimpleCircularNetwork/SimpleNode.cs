@@ -34,7 +34,7 @@ namespace SimpleCircularNetwork
             _logger = logger;
             _serializer = new MessageSerializer();
             _messageBus = new MemoryBus();
-            _repository = new AnimalRepository();
+            _repository = new AnimalRepository(Log);
             _messageBus.Subscribe(this);
             _messageBus.Subscribe(_repository);
             _actor = new NodeActor(_listeningSocket, MessageHandler);

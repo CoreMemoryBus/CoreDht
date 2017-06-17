@@ -1,18 +1,22 @@
 ﻿using System;
 using CoreDht.Utils;
-using CoreDht.Utils.Hashing;
 using SimpleCircularNetwork.Messages;
 
 namespace SimpleCircularNetwork
 {
     public class AnimalRepository : RoutableRepository<Animal>
     {
-        public AnimalRepository() : base(x => CreateAnimal((FeedAnimal)x))
-        {}
+        private readonly Action<string> _logger;
 
-        static Animal CreateAnimal(FeedAnimal msg)
+        public AnimalRepository(Action<string> logger)
         {
-            Console.WriteLine($"Creating:{msg.Animal}");
+            _logger = logger;
+            RepoItemFactory = message => CreateAnimal((FeedAnimal) message);
+        }
+
+        Animal CreateAnimal(FeedAnimal msg)
+        {
+            _logger?.Invoke($"Creating:{msg.Animal}");
             return new Animal(msg.RoutingTarget, msg.Animal);
         }
     }
