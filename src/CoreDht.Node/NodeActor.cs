@@ -22,6 +22,7 @@ namespace CoreDht.Node
             _listeningSocket = listeningSocket;
             _mqMessageHandler = mqMessageHandler;
             _exceptionHandler = exceptionHandler;
+
             _actor = NetMQActor.Create(shim =>
             {
                 _shim = shim;
@@ -51,6 +52,7 @@ namespace CoreDht.Node
         {
             try
             {
+                //if the message belongs to this node, then forward to the actor
                 _actor.SendMultipartMessage(args.Socket.ReceiveMultipartMessage());
             }
             catch (Exception e)

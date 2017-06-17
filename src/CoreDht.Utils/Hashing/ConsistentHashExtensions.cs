@@ -6,14 +6,14 @@
         {
             if (start < end)
             {
-                if (thisHash > start && thisHash <= end)
+                if (thisHash >= start && thisHash < end)
                 {
                     return true;
                 }
             }
             else //wraparound
             {
-                if (thisHash > start || thisHash <= end)
+                if (thisHash >= start || thisHash < end)
                 {
                     return true;
                 }

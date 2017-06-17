@@ -7,7 +7,7 @@ namespace SimpleCircularNetwork
     /// This service will create a hash value with values ranging from 0-255. 
     /// Only useful for illustrative purposes...
     /// </summary>
-    public class SimpleHashingService : IConsistentHashingService
+    public class EightBitHashingService : IConsistentHashingService
     {
         public ConsistentHash GetConsistentHash(string key)
         {

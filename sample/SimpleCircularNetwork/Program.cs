@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CoreDht.Utils;
 using CoreDht.Utils.Hashing;
+using SimpleCircularNetwork.Messages;
 
 namespace SimpleCircularNetwork
 {
@@ -18,6 +20,16 @@ namespace SimpleCircularNetwork
                 var nodes = new List<SimpleNode>(MaxNodes);
                 CreateAndSortNodes(janitor, nodes);
                 AssignSuccessors(nodes);
+
+                // Tell each node to display it's address domain
+                nodes.ForEach(n => n.SendToNode(new DisplayDomain()));
+
+                var sampleNode = nodes[0];
+                var routingId = _hashingService.GetConsistentHash("Armadillo");
+                sampleNode.SendToNetwork(new FeedAnimal(routingId, "Armadillo") { Meals = 2 });
+                sampleNode.SendToNetwork(new FeedAnimal(routingId, "Armadillo") { Meals = 3 });
+
+                Console.ReadKey();
             }
         }
 
@@ -48,7 +60,7 @@ namespace SimpleCircularNetwork
 
         Program()
         {
-            _hashingService = new SimpleHashingService();
+            _hashingService = new EightBitHashingService();
             _factory = new SimpleNodeFactory(_hashingService);
         }
 

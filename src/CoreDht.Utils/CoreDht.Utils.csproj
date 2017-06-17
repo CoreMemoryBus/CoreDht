@@ -34,6 +34,10 @@
       <HintPath>..\..\packages\Base58Check.0.2.0\lib\Net40\Base58Check.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CoreMemoryBus, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CoreMemoryBus.1.0.7.292\lib\net452\CoreMemoryBus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="CoreMemoryBus.Messages, Version=1.0.7.292, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CoreMemoryBus.Messages.1.0.7.292\lib\net452\CoreMemoryBus.Messages.dll</HintPath>
       <Private>True</Private>
@@ -66,17 +70,22 @@
     <Compile Include="Hashing\Sha256HashingService.cs" />
     <Compile Include="ICorrelationIdFactory.cs" />
     <Compile Include="IDnsProvider.cs" />
+    <Compile Include="IPublisher.cs" />
     <Compile Include="IRandomNumberGenerator.cs" />
+    <Compile Include="IRoutableMessage.cs" />
     <Compile Include="IUtcClock.cs" />
     <Compile Include="MessageExtensions.cs" />
     <Compile Include="ObjectCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomNumberGenerator.cs" />
+    <Compile Include="Messages\RoutableMessage.cs" />
+    <Compile Include="RoutableRepository.cs" />
     <Compile Include="UtcClock.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

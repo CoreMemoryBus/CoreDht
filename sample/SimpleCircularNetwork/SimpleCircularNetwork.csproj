@@ -61,10 +61,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animal.cs" />
+    <Compile Include="AnimalRepository.cs" />
     <Compile Include="Data.cs" />
+    <Compile Include="Messages\DisplayDomain.cs" />
+    <Compile Include="Messages\FeedAnimal.cs" />
+    <Compile Include="Messages\IRoutableMessage.cs" />
+    <Compile Include="Messages\Terminate.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleHashingService.cs" />
+    <Compile Include="EightBitHashingService.cs" />
     <Compile Include="SimpleNode.cs" />
     <Compile Include="SimpleNodeFactory.cs" />
   </ItemGroup>
