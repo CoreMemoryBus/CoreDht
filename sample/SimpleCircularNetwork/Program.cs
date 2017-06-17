@@ -18,7 +18,7 @@ namespace SimpleCircularNetwork
         private readonly IConsistentHashingService _hashingService;
         private readonly SimpleNodeFactory _factory;
 
-        const int MaxNodes = 8;
+        const int MaxNodes = 8; // This is not a "thread efficient" example. We have 1 thread per node. 
 
         private void Run(string[] args)
         {
@@ -31,6 +31,7 @@ namespace SimpleCircularNetwork
                 // Tell each node to display it's address domain
                 nodes.ForEach(n => n.SendToNode(new DisplayDomain()));
 
+                Console.WriteLine("Press any key to continue.");
                 Console.ReadKey();
 
                 // Pick any node on the network as our entry point
@@ -56,7 +57,7 @@ namespace SimpleCircularNetwork
                 sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Coyote) { Meals = 2 });
                 sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Coyote) { Meals = 6 });
 
-                // Feed all the animals
+                ////Feed all the animals
                 //foreach (var animal in Keys.Animals)
                 //{
                 //    routingId = _hashingService.GetConsistentHash(animal);
