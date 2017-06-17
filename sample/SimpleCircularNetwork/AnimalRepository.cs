@@ -5,7 +5,7 @@ using SimpleCircularNetwork.Messages;
 
 namespace SimpleCircularNetwork
 {
-    public class AnimalRepository : RoutableRepository<ConsistentHash, Animal>
+    public class AnimalRepository : RoutableRepository<Animal>
     {
         public AnimalRepository() : base(x => CreateAnimal((FeedAnimal)x))
         {}

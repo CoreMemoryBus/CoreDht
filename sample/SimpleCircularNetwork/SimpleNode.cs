@@ -55,15 +55,15 @@ namespace SimpleCircularNetwork
         private void MessageHandler(NetMQMessage mqMsg)
         {
             var routingHash = new ConsistentHash(mqMsg[RoutingHashIndex].Buffer);
-            Log($"Received msg for {(int)routingHash.Bytes[0]}");
+            //Log($"Received msg for {(int)routingHash.Bytes[0]}");
             if (routingHash.IsBetween(Identity.RoutingHash, Successor.RoutingHash))
             {
-                Log($"Accepting");
+                //Log($"Accepting");
                 UnmarshallMsg(mqMsg);
             }
             else // forward to successor
             {
-                Log($"Forwarding");
+                //Log($"Forwarding");
                 ForwardingSocket.SendMultipartMessage(mqMsg);
             }
         }
@@ -99,7 +99,7 @@ namespace SimpleCircularNetwork
 
         public void SendToNetwork(Message msg)
         {
-            var routedMsg = msg as IRoutableMessage<ConsistentHash>;
+            var routedMsg = msg as IRoutableMessage;
             if (routedMsg != null)
             {
                 var mqMsg = MarshallMsg(routedMsg.RoutingTarget, msg);

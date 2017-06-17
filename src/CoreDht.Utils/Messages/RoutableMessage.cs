@@ -3,7 +3,7 @@ using CoreMemoryBus.Messages;
 
 namespace CoreDht.Utils.Messages
 {
-    public class RoutableMessage : Message, IRoutableMessage<ConsistentHash>
+    public class RoutableMessage : Message, IRoutableMessage
     {
         protected RoutableMessage(ConsistentHash routingTarget)
         {

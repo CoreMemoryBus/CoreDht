@@ -1,12 +1,13 @@
 using System;
+using CoreDht.Utils.Hashing;
 using CoreMemoryBus;
 using CoreMemoryBus.Messages;
 using CoreMemoryBus.Messaging;
 
 namespace CoreDht.Utils
 {
-    public class RoutableRepository<THashKey, TRepoItem> 
-        : Repository<THashKey, TRepoItem>, IHandle<Message> where TRepoItem : IPublisher
+    public class RoutableRepository<TRepoItem> 
+        : Repository<ConsistentHash, TRepoItem>, IHandle<Message> where TRepoItem : IPublisher
 
     {
         protected RoutableRepository(Func<Message, TRepoItem> repoItemFactory = null) : base(repoItemFactory)
@@ -14,7 +15,7 @@ namespace CoreDht.Utils
 
         public void Handle(Message msg)
         {
-            var repoItemMessage = msg as IRoutableMessage<THashKey>;
+            var repoItemMessage = msg as IRoutableMessage;
             if (repoItemMessage != null)
             {
                 var routingHash = repoItemMessage.RoutingTarget;

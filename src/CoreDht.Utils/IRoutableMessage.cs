@@ -1,7 +1,9 @@
-﻿namespace CoreDht.Utils
+﻿using CoreDht.Utils.Hashing;
+
+namespace CoreDht.Utils
 {
-    public interface IRoutableMessage<out THashKey>
+    public interface IRoutableMessage
     {
-        THashKey RoutingTarget { get; }
+        ConsistentHash RoutingTarget { get; }
     }
 }
