@@ -11,6 +11,8 @@ namespace SimpleCircularNetwork
         public AnimalRepository(Action<string> logger)
         {
             _logger = logger;
+
+            // Note the factory should respond to the same message types as "trigger types" if object state arrives from messages.
             RepoItemFactory = message => CreateAnimal((FeedAnimal) message);
         }
 

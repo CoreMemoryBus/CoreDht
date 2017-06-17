@@ -6,7 +6,9 @@ using SimpleCircularNetwork.Messages;
 
 namespace SimpleCircularNetwork
 {
-    public class Animal : RepositoryItem<ConsistentHash>, IAmTriggeredBy<FeedAnimal>
+    public class Animal 
+        : RepositoryItem<ConsistentHash>
+        , IAmTriggeredBy<FeedAnimal> // An instance will be instantiated by this message type
     {
         public string Species { get; }
 
