@@ -4,7 +4,7 @@ using CoreMemoryBus.Messages;
 
 namespace SimpleChordNetwork.Messages
 {
-    public class FeedAnimal : RoutableMessage
+    public class FeedAnimal : RoutableMessage, IRoutingTechnique
     {
         public FeedAnimal(ConsistentHash routingId, string animal) : base(routingId)
         {
@@ -14,5 +14,7 @@ namespace SimpleChordNetwork.Messages
         public string Animal { get; }
 
         public int Meals { get; set; }
+
+        public RoutingTechnique Technique { get; set; }
     }
 }

@@ -18,44 +18,43 @@ namespace SimpleChordNetwork
         private readonly IConsistentHashingService _hashingService;
         private readonly SimpleNodeFactory _factory;
 
-        const int MaxNodes = 8; // This is not a "thread efficient" example. We have 1 thread per node. 
+        const int MaxNodes = 10; // This is not a "thread efficient" example. We have 1 thread per node. 
 
         private void Run(string[] args)
         {
             using (var janitor = new DisposableStack())
             {
-                var nodes = new List<SimpleNode>(MaxNodes);
+                var nodes = new List<SimpleChordNode>(MaxNodes);
                 CreateAndSortNodes(janitor, nodes);
                 AssignSuccessors(nodes);
 
-                // Tell each node to display it's address domain
-                nodes.ForEach(n => n.SendToNode(new DisplayDomain()));
+                // Display nodes in hashed order
+                nodes.ForEach(n =>
+                {
+                    Console.WriteLine($"{n.Identity} [{(int)n.Identity.RoutingHash.Bytes[0]},{n.Successor.RoutingHash.Bytes[0]})");
+                });
 
                 Console.WriteLine("Press any key to continue.");
                 Console.ReadKey();
 
                 // Pick any node on the network as our entry point
-                var sampleNode = nodes[3];
+                var sampleNode = nodes[5];
+                Console.WriteLine($"Supplying messages at:{sampleNode.Identity}");
 
                 // Feed the animals
-                // Observe that messages are consistently routed to the same object within each node on the network.
-                var routingId = _hashingService.GetConsistentHash(Keys.Armadillo);
-                Console.WriteLine($"{Keys.Armadillo} Id:{(int)routingId.Bytes[0]}");
-                // Observe that the state of the animal object is changed. 
-                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Armadillo) { Meals = 2 });
-                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Armadillo) { Meals = 3 });
 
-                routingId = _hashingService.GetConsistentHash(Keys.Yak);
+                // Have a look at the routing path and number of hops.
+                var routingId = _hashingService.GetConsistentHash(Keys.Yak);
                 Console.WriteLine($"{Keys.Yak} Id:{(int)routingId.Bytes[0]}");
                 // Observe that the state of the animal object is changed
                 sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Yak) { Meals = 3 });
-                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Yak) { Meals = 1 });
+                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Yak) { Meals = 1, Technique = RoutingTechnique.Chord});
 
                 // Note how Coyote exists on the same node as Yak, but the states are never mixed up.
                 routingId = _hashingService.GetConsistentHash(Keys.Coyote);
                 Console.WriteLine($"{Keys.Coyote} Id:{(int)routingId.Bytes[0]}");
                 sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Coyote) { Meals = 2 });
-                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Coyote) { Meals = 6 });
+                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Coyote) { Meals = 6, Technique = RoutingTechnique.Chord});
 
                 ////Feed all the animals
                 //foreach (var animal in Keys.Animals)
@@ -68,7 +67,7 @@ namespace SimpleChordNetwork
             }
         }
 
-        private static void AssignSuccessors(List<SimpleNode> nodes)
+        private static void AssignSuccessors(List<SimpleChordNode> nodes)
         {
             for (int i = MaxNodes - 1; i >= 0; --i)
             {
@@ -76,7 +75,7 @@ namespace SimpleChordNetwork
             }
         }
 
-        private void CreateAndSortNodes(DisposableStack janitor, List<SimpleNode> nodes)
+        private void CreateAndSortNodes(DisposableStack janitor, List<SimpleChordNode> nodes)
         {
             for (int i = 0; i < MaxNodes; ++i)
             {
@@ -87,7 +86,7 @@ namespace SimpleChordNetwork
             nodes.Sort(CompareNodes);
         }
 
-        private static int CompareNodes(SimpleNode x, SimpleNode y)
+        private static int CompareNodes(SimpleChordNode x, SimpleChordNode y)
         {
             if (x.Identity.RoutingHash < y.Identity.RoutingHash) return -1;
             return x.Identity.RoutingHash == y.Identity.RoutingHash ? 0 : 1;

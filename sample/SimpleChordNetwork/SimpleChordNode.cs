@@ -11,9 +11,8 @@ using SimpleChordNetwork.Messages;
 
 namespace SimpleChordNetwork
 {
-    public class SimpleNode 
-        : IHandle<Terminate>
-        , IHandle<DisplayDomain>
+    public class SimpleChordNode 
+        : IHandle<TerminateDht>
         , IDisposable
     {
         private readonly DealerSocket _listeningSocket;
@@ -27,7 +26,7 @@ namespace SimpleChordNetwork
         public NodeInfo Identity { get; private set; }
         public NodeInfo Successor { get; set; }
 
-        public SimpleNode(NodeInfo identity, DealerSocket listeningSocket, Action<string> logger)
+        public SimpleChordNode(NodeInfo identity, DealerSocket listeningSocket, Action<string> logger)
         {
             Identity = Successor = identity;
             _listeningSocket = listeningSocket;
@@ -40,8 +39,10 @@ namespace SimpleChordNetwork
             _actor = new NodeActor(_listeningSocket, MessageHandler);
         }
 
-        const int RoutingHashIndex = 0;
-        const int PayloadFrameIndex = 1;
+        const int RoutingHashFrameIndex = 0;
+        const int HopCountFrameIndex = 1;
+        const int RoutingTechniqueIndex = 2;
+        const int PayloadFrameIndex = 3;
 
         private DealerSocket _forwardingSocket;
 
@@ -54,17 +55,34 @@ namespace SimpleChordNetwork
 
         private void MessageHandler(NetMQMessage mqMsg)
         {
-            var routingHash = new ConsistentHash(mqMsg[RoutingHashIndex].Buffer);
+            var routingHash = new ConsistentHash(mqMsg[RoutingHashFrameIndex].Buffer);
             //Log($"Received msg for {(int)routingHash.Bytes[0]}");
             if (routingHash.IsBetween(Identity.RoutingHash, Successor.RoutingHash))
             {
                 //Log($"Accepting");
                 UnmarshallMsg(mqMsg);
             }
-            else // forward to successor
+            else
             {
                 //Log($"Forwarding");
-                ForwardingSocket.SendMultipartMessage(mqMsg);
+                var hopCount = mqMsg[HopCountFrameIndex].ConvertToInt32();
+                var routingTechnique = (RoutingTechnique) mqMsg[RoutingTechniqueIndex].ConvertToInt32();
+
+                // NetMQ messages are immutable so we need to re-write
+                var newMqMsg = new NetMQMessage();
+                newMqMsg.Append(mqMsg[RoutingHashFrameIndex].Buffer);
+                newMqMsg.Append(++hopCount);
+                newMqMsg.Append(mqMsg[RoutingTechniqueIndex].Buffer); 
+                newMqMsg.Append(mqMsg[PayloadFrameIndex].Buffer);
+
+                if (routingTechnique == RoutingTechnique.Successor)
+                {
+                    ForwardingSocket.SendMultipartMessage(newMqMsg);
+                }
+                else
+                {
+                    
+                }
             }
         }
 
@@ -75,12 +93,15 @@ namespace SimpleChordNetwork
         
         public NetMQMessage MarshallMsg(ConsistentHash destinationHash, Message msg)
         {
+            var routingTechnique = (msg as IRoutingTechnique)?.Technique ?? RoutingTechnique.Successor;
             var json = _serializer.Serialize(msg);
-            var mqMsg = new NetMQMessage(new []
-            {
-               new NetMQFrame(destinationHash.Bytes),
-               new NetMQFrame(json), 
-            });
+            var hopCount = 0;
+
+            var mqMsg = new NetMQMessage();
+            mqMsg.Append(destinationHash.Bytes);
+            mqMsg.Append(hopCount);
+            mqMsg.Append((int)routingTechnique);
+            mqMsg.Append(json);
 
             return mqMsg;
         }
@@ -88,6 +109,8 @@ namespace SimpleChordNetwork
         private void UnmarshallMsg(NetMQMessage mqMsg)
         {
             var msg = _serializer.Deserialize<Message>(json: mqMsg[PayloadFrameIndex].ConvertToString());
+            var hopCount = mqMsg[HopCountFrameIndex].ConvertToInt32();
+            Log($"{msg.TypeName()} Hops:{hopCount}");
             _messageBus.Publish(msg);
         }
         
@@ -109,17 +132,6 @@ namespace SimpleChordNetwork
 
         #region Handlers
 
-        public void Handle(DisplayDomain message)
-        {
-            Log($"Range:[{(int) Identity.RoutingHash.Bytes[0]},{Successor.RoutingHash.Bytes[0]})");
-        }
-
-        public void Handle(Terminate message)
-        {
-            _actor.Stop();
-            // and forward to successor
-        }
-
         #endregion
 
         #region IDisposable Support
@@ -136,5 +148,12 @@ namespace SimpleChordNetwork
             disposedValue = true;
         }
         #endregion
+
+        public void Handle(TerminateDht message)
+        {
+            // Send to all distinct entries in the routing table
+ 
+            _actor.Stop();
+        }
     }
 }

@@ -64,14 +64,13 @@
     <Compile Include="Animal.cs" />
     <Compile Include="AnimalRepository.cs" />
     <Compile Include="Keys.cs" />
+    <Compile Include="Messages\DisplayDomain.cs" />
     <Compile Include="Messages\FeedAnimal.cs" />
-    <Compile Include="Messages\IRoutingTechnique.cs" />
-    <Compile Include="Messages\TerminateNode.cs" />
-    <Compile Include="Messages\TerminateDht.cs" />
+    <Compile Include="Messages\Terminate.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EightBitHashingService.cs" />
-    <Compile Include="SimpleChordNode.cs" />
+    <Compile Include="SimpleNode.cs" />
     <Compile Include="SimpleNodeFactory.cs" />
   </ItemGroup>
   <ItemGroup>

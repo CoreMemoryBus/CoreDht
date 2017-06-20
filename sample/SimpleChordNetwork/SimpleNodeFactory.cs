@@ -15,12 +15,12 @@ namespace SimpleChordNetwork
             _socketFactory = new InProcNodeSocketFactory();
         }
 
-        public SimpleNode CreateNode(string identifier)
+        public SimpleChordNode CreateNode(string identifier)
         {
             var routingHash = _hashingService.GetConsistentHash(identifier);
             var identity = new NodeInfo(identifier, routingHash, identifier);
             var hostAndPort = identifier;
-            return new SimpleNode(identity, _socketFactory.CreateBindingSocket(hostAndPort), Console.WriteLine);
+            return new SimpleChordNode(identity, _socketFactory.CreateBindingSocket(hostAndPort), Console.WriteLine);
         }
     }
 }
