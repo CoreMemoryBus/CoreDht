@@ -12,7 +12,8 @@ using SimpleCircularNetwork.Messages;
 namespace SimpleCircularNetwork
 {
     public class SimpleNode 
-        : IHandle<Terminate>
+        : IHandle<TerminateNode>
+        , IHandle<TerminateDht>
         , IHandle<DisplayDomain>
         , IDisposable
     {
@@ -114,10 +115,9 @@ namespace SimpleCircularNetwork
             Log($"Range:[{(int) Identity.RoutingHash.Bytes[0]},{Successor.RoutingHash.Bytes[0]})");
         }
 
-        public void Handle(Terminate message)
+        public void Handle(TerminateNode message)
         {
             _actor.Stop();
-            // and forward to successor
         }
 
         #endregion
@@ -136,5 +136,15 @@ namespace SimpleCircularNetwork
             disposedValue = true;
         }
         #endregion
+
+        public void Handle(TerminateDht message)
+        {
+
+            message.RoutingTarget = Successor.RoutingHash;
+            SendToNetwork(message);
+
+            _actor.Stop();
+            Log("Terminating");
+        }
     }
 }

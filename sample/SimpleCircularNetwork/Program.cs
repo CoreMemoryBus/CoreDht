@@ -65,6 +65,10 @@ namespace SimpleCircularNetwork
                 //}
 
                 Console.ReadKey();
+
+                sampleNode.SendToNode(new TerminateDht(sampleNode.Identity.RoutingHash));
+
+                Console.ReadKey();
             }
         }
 
