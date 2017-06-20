@@ -120,6 +120,16 @@ namespace SimpleCircularNetwork
             _actor.Stop();
         }
 
+        public void Handle(TerminateDht message)
+        {
+
+            message.RoutingTarget = Successor.RoutingHash;
+            SendToNetwork(message);
+
+            _actor.Stop();
+            Log("Terminating");
+        }
+
         #endregion
 
         #region IDisposable Support
@@ -137,14 +147,5 @@ namespace SimpleCircularNetwork
         }
         #endregion
 
-        public void Handle(TerminateDht message)
-        {
-
-            message.RoutingTarget = Successor.RoutingHash;
-            SendToNetwork(message);
-
-            _actor.Stop();
-            Log("Terminating");
-        }
     }
 }
