@@ -106,7 +106,10 @@ namespace CoreDht.Node
 
         public void Dispose()
         {
-            _poller.Stop();
+            if (_poller.IsRunning)
+            {
+                _poller.Stop();
+            }
             Dispose(true);
         }
 
