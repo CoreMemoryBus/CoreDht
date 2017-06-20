@@ -16,11 +16,15 @@ namespace CoreDht.Node
         private PairSocket _shim;
         private NetMQPoller _poller;
         private readonly NetMQActor _actor;
+        private readonly int _socketMsgBatchSize;
 
-        public NodeActor(NetMQSocket listeningSocket, Action<NetMQMessage> mqMessageHandler, Action<NetMQSocket, Exception> exceptionHandler = null)
+        public const int DefaultMsgBatchSize = 1000;
+
+        public NodeActor(NetMQSocket listeningSocket, Action<NetMQMessage> mqMessageHandler, Action<NetMQSocket, Exception> exceptionHandler = null, int socketMsgBatchSize = DefaultMsgBatchSize)
         {
             _listeningSocket = listeningSocket;
             _mqMessageHandler = mqMessageHandler;
+            _socketMsgBatchSize = socketMsgBatchSize;
             _exceptionHandler = exceptionHandler;
 
             _actor = NetMQActor.Create(shim =>
@@ -52,8 +56,15 @@ namespace CoreDht.Node
         {
             try
             {
-                //if the message belongs to this node, then forward to the actor
-                _actor.SendMultipartMessage(args.Socket.ReceiveMultipartMessage());
+                var socket = args.Socket;
+                for (int i = 0; i < _socketMsgBatchSize; ++i)
+                {
+                    NetMQMessage mqMsg = null;
+                    if (socket.TryReceiveMultipartMessage(ref mqMsg))
+                    {
+                        _actor.SendMultipartMessage(mqMsg);
+                    }
+                }
             }
             catch (Exception e)
             {
