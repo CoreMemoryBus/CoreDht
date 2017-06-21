@@ -47,10 +47,11 @@ namespace CoreDht.Node
         {
             for (int i = Entries.Length - 1; i >= 0; --i)
             {
-                var chordHash = Entries[i].SuccessorIdentity.RoutingHash;
+                var chordNode = Entries[i].SuccessorIdentity;
+                var chordHash = chordNode.RoutingHash;
                 if (chordHash.IsBetween(Identity.RoutingHash, startingHash))
                 {
-                    return Entries[i].SuccessorIdentity;
+                    return chordNode;
                 }
             }
 
