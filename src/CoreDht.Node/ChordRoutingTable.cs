@@ -47,8 +47,8 @@ namespace CoreDht.Node
         {
             for (int i = Entries.Length - 1; i >= 0; --i)
             {
-                var successorHash = Entries[i].SuccessorIdentity.RoutingHash;
-                if (successorHash.IsBetween(Identity.RoutingHash, startingHash))
+                var chordHash = Entries[i].SuccessorIdentity.RoutingHash;
+                if (chordHash.IsBetween(Identity.RoutingHash, startingHash))
                 {
                     return Entries[i].SuccessorIdentity;
                 }
