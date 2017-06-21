@@ -15,11 +15,14 @@ namespace SimpleChordNetwork
         : IHandle<TerminateDht>
         , IDisposable
     {
+        private readonly IUtcClock _clock;
         private readonly DealerSocket _listeningSocket;
         private readonly Action<string> _logger;
         private readonly NodeActor _actor;
         private readonly MessageSerializer _serializer;
         private readonly MemoryBus _messageBus;
+        private SocketCache _socketCache;
+        private INodeSocketFactory _socketFactory;
 
         private readonly AnimalRepository _repository;
 
@@ -29,29 +32,25 @@ namespace SimpleChordNetwork
         public SimpleChordNode(NodeInfo identity, DealerSocket listeningSocket, Action<string> logger)
         {
             Identity = Successor = identity;
+            _clock = new UtcClock();
             _listeningSocket = listeningSocket;
             _logger = logger;
             _serializer = new MessageSerializer();
             _messageBus = new MemoryBus();
-            _repository = new AnimalRepository(Log);
             _messageBus.Subscribe(this);
+            _repository = new AnimalRepository(Log);
             _messageBus.Subscribe(_repository);
             _actor = new NodeActor(_listeningSocket, MessageHandler);
+            _socketFactory = new InProcNodeSocketFactory();
+            _socketCache = new SocketCache(_socketFactory, _clock);
+            _socketCache.AddActor(Identity.HostAndPort, _actor);
+            _actor.Start();
         }
 
         const int RoutingHashFrameIndex = 0;
         const int HopCountFrameIndex = 1;
         const int RoutingTechniqueIndex = 2;
         const int PayloadFrameIndex = 3;
-
-        private DealerSocket _forwardingSocket;
-
-        private DealerSocket CreateForwardingSocket()
-        {
-            return new DealerSocket($">inproc://{Successor.HostAndPort}");
-        }
-
-        DealerSocket ForwardingSocket => _forwardingSocket ?? (_forwardingSocket = CreateForwardingSocket());
 
         private void MessageHandler(NetMQMessage mqMsg)
         {
@@ -68,7 +67,7 @@ namespace SimpleChordNetwork
                 var hopCount = mqMsg[HopCountFrameIndex].ConvertToInt32();
                 var routingTechnique = (RoutingTechnique) mqMsg[RoutingTechniqueIndex].ConvertToInt32();
 
-                // NetMQ messages are immutable so we need to re-write
+                // NetMQ messages are immutable so we need to re-write to change the hop count
                 var newMqMsg = new NetMQMessage();
                 newMqMsg.Append(mqMsg[RoutingHashFrameIndex].Buffer);
                 newMqMsg.Append(++hopCount);
@@ -77,7 +76,8 @@ namespace SimpleChordNetwork
 
                 if (routingTechnique == RoutingTechnique.Successor)
                 {
-                    ForwardingSocket.SendMultipartMessage(newMqMsg);
+                    // Pick a socket from the cache - create if necessary and send
+                    _socketCache[Successor.HostAndPort].SendMultipartMessage(newMqMsg);
                 }
                 else
                 {
@@ -88,7 +88,7 @@ namespace SimpleChordNetwork
 
         void Log(string logMessage)
         {
-            _logger?.Invoke($"{Identity.Identifier}\t{DateTime.Now.ToString("hh:mm:ss.fff")}\t{logMessage}");
+            _logger?.Invoke($"{Identity.Identifier}\t{_clock.Now.ToString("hh:mm:ss.fff")}\t{logMessage}");
         }
         
         public NetMQMessage MarshallMsg(ConsistentHash destinationHash, Message msg)

@@ -15,7 +15,7 @@ namespace CoreDht.Node
         private readonly Action<NetMQSocket, Exception> _exceptionHandler;
         private PairSocket _shim;
         private NetMQPoller _poller;
-        private readonly NetMQActor _actor;
+        private NetMQActor _actor;
         private readonly int _socketMsgBatchSize;
 
         public const int DefaultMsgBatchSize = 1000;
@@ -26,13 +26,16 @@ namespace CoreDht.Node
             _mqMessageHandler = mqMessageHandler;
             _socketMsgBatchSize = socketMsgBatchSize;
             _exceptionHandler = exceptionHandler;
+        }
 
+        public void Start()
+        {
             _actor = NetMQActor.Create(shim =>
             {
                 _shim = shim;
                 _shim.ReceiveReady += ShimOnReceiveReady;
                 using (new DisposableAction(
-                    () => { _listeningSocket.ReceiveReady += ListeningSocketOnReceiveReady; }, 
+                    () => { _listeningSocket.ReceiveReady += ListeningSocketOnReceiveReady; },
                     () => { _listeningSocket.ReceiveReady -= ListeningSocketOnReceiveReady; }))
                 {
                     _poller = new NetMQPoller { _listeningSocket, _shim };
@@ -43,9 +46,9 @@ namespace CoreDht.Node
             });
         }
 
-        public bool IsRunning => _poller.IsRunning;
+        public void Stop() { _poller.Stop(); }
 
-        public void Stop() {  _poller.Stop(); }
+        public bool IsRunning => _poller.IsRunning;
 
         private void ShimOnReceiveReady(object sender, NetMQSocketEventArgs e)
         {

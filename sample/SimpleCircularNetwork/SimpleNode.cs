@@ -39,6 +39,7 @@ namespace SimpleCircularNetwork
             _messageBus.Subscribe(this);
             _messageBus.Subscribe(_repository);
             _actor = new NodeActor(_listeningSocket, MessageHandler);
+            _actor.Start();
         }
 
         const int RoutingHashIndex = 0;

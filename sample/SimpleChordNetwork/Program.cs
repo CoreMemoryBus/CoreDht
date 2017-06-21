@@ -27,6 +27,7 @@ namespace SimpleChordNetwork
                 var nodes = new List<SimpleChordNode>(MaxNodes);
                 CreateAndSortNodes(janitor, nodes);
                 AssignSuccessors(nodes);
+                AssignRoutingTable(nodes);
 
                 // Display nodes in hashed order
                 nodes.ForEach(n =>
@@ -46,14 +47,15 @@ namespace SimpleChordNetwork
                 // Have a look at the routing path and number of hops.
                 var routingId = _hashingService.GetConsistentHash(Keys.Yak);
                 Console.WriteLine($"{Keys.Yak} Id:{(int)routingId.Bytes[0]}");
-                // Observe that the state of the animal object is changed
-                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Yak) { Meals = 3 });
+                // Observe the number of hops required to reach a target by technique
+                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Yak) { Meals = 3 , Technique = RoutingTechnique.Successor});
                 sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Yak) { Meals = 1, Technique = RoutingTechnique.Chord});
 
                 // Note how Coyote exists on the same node as Yak, but the states are never mixed up.
                 routingId = _hashingService.GetConsistentHash(Keys.Coyote);
                 Console.WriteLine($"{Keys.Coyote} Id:{(int)routingId.Bytes[0]}");
-                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Coyote) { Meals = 2 });
+                // Observe the number of hops required to reach a target by technique
+                sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Coyote) { Meals = 2, Technique = RoutingTechnique.Successor});
                 sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Coyote) { Meals = 6, Technique = RoutingTechnique.Chord});
 
                 ////Feed all the animals
@@ -65,6 +67,11 @@ namespace SimpleChordNetwork
 
                 Console.ReadKey();
             }
+        }
+
+        private void AssignRoutingTable(List<SimpleChordNode> nodes)
+        {
+            
         }
 
         private static void AssignSuccessors(List<SimpleChordNode> nodes)

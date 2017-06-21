@@ -5,12 +5,13 @@ namespace CoreDht.Utils
 {
     public class ObjectCache<TKey, TValue>
     {
-        private readonly Func<TKey, TValue> _factory;
+        protected Func<TKey, TValue> Factory { get; set; }
+
         protected Dictionary<TKey, TValue> Cache { get; }
 
-        public ObjectCache(Func<TKey, TValue> factory)
+        public ObjectCache(Func<TKey, TValue> factory = null)
         {
-            _factory = factory;
+            Factory = factory;
             Cache = new Dictionary<TKey, TValue>();
         }
 
@@ -21,11 +22,23 @@ namespace CoreDht.Utils
                 TValue value;
                 if (!Cache.TryGetValue(key, out value))
                 {
-                    value = _factory(key);
+                    if (Factory == null)
+                    {
+                        throw new FactoryNotAssignedException();
+                    }
+
+                    value = Factory(key);
                     Cache[key] = value;
                 }
                 return value;
             }
+        }
+
+        public class FactoryNotAssignedException : Exception
+        {
+            public FactoryNotAssignedException()
+                : base("Object Factory must be defined before retreiving from ObjectCache")
+            { }
         }
 
         public virtual void Remove(TKey key)
