@@ -20,10 +20,11 @@ namespace CoreDht.Node
         private void Init(NodeInfo identity, int tableLength)
         {
             var routingHash = identity.RoutingHash;
+            var one = routingHash.One();
 
             for (int i = 0; i < tableLength; ++i)
             {
-                var finger = routingHash + routingHash.One() << i;
+                var finger = routingHash + (one << i);
                 Entries[i] = new RoutingTableEntry(finger, identity);
             }
         }
@@ -31,9 +32,11 @@ namespace CoreDht.Node
         public static RoutingTableEntry[] CreateEntries(int entryCount, ConsistentHash nodeHash)
         {
             var entries = RoutingTable.CreateEntries(entryCount);
+            var one = nodeHash.One();
+
             for (int i = 0; i < entryCount; ++i)
             {
-                var finger = nodeHash + nodeHash.One() << i;
+                var finger = nodeHash + (one << i);
                 entries[i] = new RoutingTableEntry(finger, null);
             }
 
@@ -42,15 +45,14 @@ namespace CoreDht.Node
 
         public NodeInfo FindClosestPrecedingFinger(ConsistentHash startingHash)
         {
-            //Check finger tables
             for (int i = Entries.Length - 1; i >= 0; --i)
             {
-                if (Entries[i].SuccessorIdentity.RoutingHash.IsBetween(Identity.RoutingHash, startingHash))
+                var successorHash = Entries[i].SuccessorIdentity.RoutingHash;
+                if (successorHash.IsBetween(Identity.RoutingHash, startingHash))
                 {
                     return Entries[i].SuccessorIdentity;
                 }
             }
-            // Check successors
 
             return Identity;
         }

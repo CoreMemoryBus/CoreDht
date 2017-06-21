@@ -21,8 +21,9 @@ namespace SimpleChordNetwork
         private readonly NodeActor _actor;
         private readonly MessageSerializer _serializer;
         private readonly MemoryBus _messageBus;
-        private SocketCache _socketCache;
-        private INodeSocketFactory _socketFactory;
+        private readonly SocketCache _socketCache;
+        private readonly INodeSocketFactory _socketFactory;
+        private readonly ChordRoutingTable _routingTable;
 
         private readonly AnimalRepository _repository;
 
@@ -44,6 +45,7 @@ namespace SimpleChordNetwork
             _socketFactory = new InProcNodeSocketFactory();
             _socketCache = new SocketCache(_socketFactory, _clock);
             _socketCache.AddActor(Identity.HostAndPort, _actor);
+            _routingTable = new ChordRoutingTable(Identity, Identity.RoutingHash.BitCount);
             _actor.Start();
         }
 
@@ -144,6 +146,7 @@ namespace SimpleChordNetwork
 
             _actor.Dispose();
             _listeningSocket.Dispose();
+            _socketCache.Dispose();
 
             disposedValue = true;
         }
