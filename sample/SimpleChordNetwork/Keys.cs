@@ -1,5 +1,8 @@
 namespace SimpleChordNetwork
 {
+    /// <summary>
+    /// This collaction of animals (Keys) has been secretly crafted to ensure no collisions when using our EightBitHashingService
+    /// </summary>
     public static class Keys
     {
         public const string Abyssinian = "Abyssinian";

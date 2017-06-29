@@ -42,6 +42,15 @@ namespace SimpleChordNetwork
 
                 // Pick any node on the network as our entry point
                 var sampleNode = nodes[5];
+                // For curiosity sake we'll inspect the routing table
+                Console.WriteLine($"Routing table for {sampleNode.Identity}");
+                foreach (var entry in sampleNode.RoutingTable.Entries)
+                {
+                    Console.WriteLine($"StartAt:{(int)entry.StartValue.Bytes[0]} Successor:{entry.SuccessorIdentity}");
+                }
+
+                Console.ReadKey();
+                // We can inject messages at any node and they'll make it to the target...
                 Console.WriteLine($"Supplying messages at:{sampleNode.Identity}");
 
                 // Feed the animals
