@@ -20,7 +20,7 @@ namespace SimpleChordNetwork
         public void Handle(FeedAnimal message)
         {
             Meals += message.Meals;
-            Console.WriteLine($"{Species} received {message.Meals} meals. Total:{Meals} meals");
+            Console.WriteLine($"{Species} received {message.Meals} meals. Total:{Meals} meals Technique:{message.Technique}");
         }
 
         public int Meals { get; set; }

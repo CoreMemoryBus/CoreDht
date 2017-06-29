@@ -43,7 +43,18 @@ namespace CoreDht.Node
             return entries;
         }
 
-        public NodeInfo FindClosestPrecedingFinger(ConsistentHash startingHash)
+        public static ConsistentHash[] CreateStartValues(int entryCount, ConsistentHash startHash)
+        {
+            var result = new ConsistentHash[entryCount];
+            var oneHash = startHash.One();
+            for (int i = 0; i < entryCount; i++)
+            {
+                result[i] = startHash + (oneHash << i);
+            }
+            return result;
+        }
+
+        public NodeInfo FindClosestPrecedingNode(ConsistentHash startingHash)
         {
             for (int i = Entries.Length - 1; i >= 0; --i)
             {

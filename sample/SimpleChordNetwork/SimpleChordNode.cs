@@ -49,6 +49,8 @@ namespace SimpleChordNetwork
             _actor.Start();
         }
 
+        public ChordRoutingTable RoutingTable => _routingTable;
+
         const int RoutingHashFrameIndex = 0;
         const int HopCountFrameIndex = 1;
         const int RoutingTechniqueIndex = 2;
@@ -69,23 +71,29 @@ namespace SimpleChordNetwork
                 var hopCount = mqMsg[HopCountFrameIndex].ConvertToInt32();
                 var routingTechnique = (RoutingTechnique) mqMsg[RoutingTechniqueIndex].ConvertToInt32();
 
-                // NetMQ messages are immutable so we need to re-write to change the hop count
-                var newMqMsg = new NetMQMessage();
-                newMqMsg.Append(mqMsg[RoutingHashFrameIndex].Buffer);
-                newMqMsg.Append(++hopCount);
-                newMqMsg.Append(mqMsg[RoutingTechniqueIndex].Buffer); 
-                newMqMsg.Append(mqMsg[PayloadFrameIndex].Buffer);
+                var newMqMsg = IncrementHopCount(mqMsg, hopCount);
 
-                if (routingTechnique == RoutingTechnique.Successor)
+                var routingHostAndPort = Successor.HostAndPort;
+                if (routingTechnique == RoutingTechnique.Chord)
                 {
-                    // Pick a socket from the cache - create if necessary and send
-                    _socketCache[Successor.HostAndPort].SendMultipartMessage(newMqMsg);
+                    var chordNodeIdentity = _routingTable.FindClosestPrecedingNode(routingHash);
+                    routingHostAndPort = chordNodeIdentity.HostAndPort;
                 }
-                else
-                {
-                    
-                }
+
+                _socketCache[routingHostAndPort].SendMultipartMessage(newMqMsg);
             }
+        }
+
+        private static NetMQMessage IncrementHopCount(NetMQMessage mqMsg, int hopCount)
+        {
+            // NetMQ messages are immutable so we need to re-write to change the hop count
+            // We'd never do this in production code. 
+            var newMqMsg = new NetMQMessage();
+            newMqMsg.Append(mqMsg[RoutingHashFrameIndex].Buffer);
+            newMqMsg.Append(++hopCount);
+            newMqMsg.Append(mqMsg[RoutingTechniqueIndex].Buffer);
+            newMqMsg.Append(mqMsg[PayloadFrameIndex].Buffer);
+            return newMqMsg;
         }
 
         void Log(string logMessage)
@@ -112,7 +120,8 @@ namespace SimpleChordNetwork
         {
             var msg = _serializer.Deserialize<Message>(json: mqMsg[PayloadFrameIndex].ConvertToString());
             var hopCount = mqMsg[HopCountFrameIndex].ConvertToInt32();
-            Log($"{msg.TypeName()} Hops:{hopCount}");
+            var technique = (RoutingTechnique) mqMsg[RoutingTechniqueIndex].ConvertToInt32();
+            Log($"{msg.TypeName()} Hops:{hopCount} Technique:{technique}");
             _messageBus.Publish(msg);
         }
         

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CoreDht.Node;
 using CoreDht.Utils;
 using CoreDht.Utils.Hashing;
 using SimpleChordNetwork.Messages;
@@ -10,8 +11,9 @@ namespace SimpleChordNetwork
     /// In this example we use a trivial consistent hash (EightBitHashingService) to route messages through a simple circular network.
     /// When a message meets its target, it changes the state of that node. In this case we're "feeding animals" where specific animals
     /// are consistently created and fed in specific nodes. <br>
-    /// The network is constructed externally and messages are routed in a simple circular fashion. We have a DHT, but it does not route
-    /// efficiently, nor is it resilient or elastic.
+    /// The network is constructed externally and messages are routed in either a circular or chordwise fashion. We have a DHT, but it does not route
+    /// efficiently, nor is it resilient or elastic. We can however demonstrate the increase in routing efficiency with the chord technique.
+    /// We'll need to change the logic so that the network can calculate the next node instead of an external process.
     /// </summary>
     class Program
     {
@@ -51,19 +53,11 @@ namespace SimpleChordNetwork
                 sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Yak) { Meals = 3 , Technique = RoutingTechnique.Successor});
                 sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Yak) { Meals = 1, Technique = RoutingTechnique.Chord});
 
-                // Note how Coyote exists on the same node as Yak, but the states are never mixed up.
                 routingId = _hashingService.GetConsistentHash(Keys.Coyote);
                 Console.WriteLine($"{Keys.Coyote} Id:{(int)routingId.Bytes[0]}");
                 // Observe the number of hops required to reach a target by technique
                 sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Coyote) { Meals = 2, Technique = RoutingTechnique.Successor});
                 sampleNode.SendToNetwork(new FeedAnimal(routingId, Keys.Coyote) { Meals = 6, Technique = RoutingTechnique.Chord});
-
-                ////Feed all the animals
-                //foreach (var animal in Keys.Animals)
-                //{
-                //    routingId = _hashingService.GetConsistentHash(animal);
-                //    sampleNode.SendToNetwork(new FeedAnimal(routingId, animal) { Meals = 1 });
-                //}
 
                 Console.ReadKey();
             }
@@ -71,7 +65,29 @@ namespace SimpleChordNetwork
 
         private void AssignRoutingTable(List<SimpleChordNode> nodes)
         {
-            
+            // In a future implementation we need to be able to ask the ring network itself 
+            // calculate these values for us instead of an external "network bootstrapper".
+            for(int nodeIndex = 0; nodeIndex < nodes.Count; ++nodeIndex)
+            {
+                var startAt = nodes[nodeIndex].Identity.RoutingHash;
+                var oneHash = startAt.One();
+                var entries = new RoutingTableEntry[startAt.BitCount];
+                for (int i = 0; i < entries.Length; ++i)
+                {
+                    var startEntryHash = startAt + (oneHash << i);
+                    foreach (var node in nodes)
+                    {
+                        var nodeHash = node.Identity.RoutingHash;
+                        if (nodeHash > startEntryHash)
+                        {
+                            entries[i] = new RoutingTableEntry(startEntryHash, node.Identity);
+                            break;
+                        }
+                    }
+                }
+
+                nodes[nodeIndex].RoutingTable.Copy(entries);
+            }
         }
 
         private static void AssignSuccessors(List<SimpleChordNode> nodes)
