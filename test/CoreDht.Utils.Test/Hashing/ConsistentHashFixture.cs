@@ -64,23 +64,41 @@ namespace CoreDht.Utils.Test.Hashing
         public void TestShift()
         {
             var hOne = ConsistentHash.One(1);
-            var hX = hOne << 10;
-            Console.WriteLine($"{hX.ToHex()} {hOne.ToHex()}");
+            var hX = hOne << 2;
+            Assert.That(hX.ToHex(), Is.EqualTo("04"));
+            // Overflow not accomodated
+            Assert.That((hOne << 9).ToHex(), Is.EqualTo("00"));
         }
 
-        // Construction
-        // One
-        // Zero
-        // New From Hex
-        // New from Base58
-        // Rank
-        // Bitcount
-        // Add
-        // AddWithOverflow
-        // Compare
-        // Between*
-        // Shift
-        // ShiftWithOverflow
+        [Test]
+        public void TestBetweenExtension()
+        {
+            var hZero = ConsistentHash.Zero(1);
+            var hTen = ConsistentHash.NewFromHex("0A");
 
+            var hX = ConsistentHash.One(1);
+            Assert.That(hX.IsBetween(hZero, hTen));
+
+            // Lower Bound is exclusive
+            hX = ConsistentHash.NewFromHex("00");
+            Assert.That(!hX.IsBetween(hZero, hTen));
+
+            // Upper Bound is inclusive
+            hX = ConsistentHash.NewFromHex("0A");
+            Assert.That(hX.IsBetween(hZero, hTen));
+
+            // Wraparound case
+            var hLower = ConsistentHash.NewFromHex("F0");
+            var hUpper = ConsistentHash.NewFromHex("01");
+            hX = ConsistentHash.NewFromHex("FF");
+            Assert.That(hX.IsBetween(hLower, hUpper));
+
+            hX = ConsistentHash.NewFromHex("F0");
+            Assert.That(!hX.IsBetween(hLower, hUpper));
+            hX = ConsistentHash.NewFromHex("01");
+            Assert.That(hX.IsBetween(hLower, hUpper));
+        }
+
+        // New from Base58
     }
 }
