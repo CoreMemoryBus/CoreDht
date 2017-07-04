@@ -6,16 +6,34 @@ namespace CoreDht.Node
 {
     public class Node : IDisposable
     {
+        public NodeConfiguration Configuration { get; }
+        protected NodeServices Services { get; set; }
         protected Action<string> Logger { get; }
         protected DealerSocket ListeningSocket { get; }
         protected NodeActor Actor { get; }
 
-        protected Node(string binding, Action<string> logger)
+        public NodeInfo Identity { get; private set; }
+        public NodeInfo Predecessor { get; private set; }
+        public NodeInfo Successor { get; protected set; }
+        // SuccessorTable
+        // ChordTable
+
+
+        protected Node(string hostAndPort, string identifier, NodeConfiguration configuration, NodeServices services)
         {
-            Logger = logger;
-            ListeningSocket = new DealerSocket(binding);
+            Configuration = configuration;
+            Services = services;
+            Logger = Services.Logger;
+            Identity = new NodeInfo(identifier, Services.ConsistentHashingService.GetConsistentHash(identifier), hostAndPort);
+            Predecessor = Identity;
+            Successor = Identity;
+            ListeningSocket = Services.SocketFactory.CreateBindingSocket(hostAndPort);
             Actor = new NodeActor(ListeningSocket, OnReceiveMsg, (socket, ex) => {});
         }
+
+        protected Node(string hostAndPort, string identifier, NodeServices services) 
+            : this(hostAndPort, identifier, new DefaultNodeConfiguration(), services)
+        { }
 
         void OnReceiveMsg(NetMQMessage msg)
         {

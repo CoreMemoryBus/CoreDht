@@ -38,15 +38,15 @@ namespace CoreDht.Node
                     () => { _listeningSocket.ReceiveReady += ListeningSocketOnReceiveReady; },
                     () => { _listeningSocket.ReceiveReady -= ListeningSocketOnReceiveReady; }))
                 {
-                    _poller = new NetMQPoller { _listeningSocket, _shim };
+                    _poller = new NetMQPoller { _listeningSocket, _shim }; // TODO: Share the poller across multiple nodes...
 
                     _shim.SignalOK();
-                    _poller.Run();
+                    _poller.Run(); // TODO: How do we do this when poller is shared
                 }
             });
         }
 
-        public void Stop() { _poller.Stop(); }
+        public virtual void Stop() { _poller.Stop(); }
 
         public bool IsRunning => _poller.IsRunning;
 
@@ -100,18 +100,23 @@ namespace CoreDht.Node
                 if (disposing)
                 {
                     _actor.Dispose();
-                    _poller?.Dispose();
+                    DisposePoller();
                 }
 
                 _isDisposed = true;
             }
         }
 
+        protected virtual void DisposePoller()
+        {
+            _poller?.Dispose();
+        }
+
         public void Dispose()
         {
-            if (_poller.IsRunning)
+            if (IsRunning)
             {
-                _poller.Stop();
+                Stop();
             }
             Dispose(true);
         }

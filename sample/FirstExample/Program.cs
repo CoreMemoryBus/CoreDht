@@ -1,4 +1,6 @@
 ﻿using System;
+using CoreDht.Node;
+using CoreDht.Utils.Hashing;
 using NetMQ;
 
 namespace FirstExample
@@ -7,7 +9,8 @@ namespace FirstExample
     {
         void Run(string[] args)
         {
-            var firstNode = new MyAppNode("@inproc://localhost:9000", Console.WriteLine);
+            var firstNode = new MyAppNode("localhost:9000", "MyApp");
+            Console.WriteLine("Press any key to continue");
             Console.ReadKey();
             firstNode.Actor.SendFrame(NetMQActor.EndShimMessage);
             Console.ReadKey();
@@ -18,5 +21,8 @@ namespace FirstExample
             var theApp = new Program();
             theApp.Run(args);
         }
+
+        Program()
+        {}
     }
 }

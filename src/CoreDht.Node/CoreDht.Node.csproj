@@ -72,7 +72,9 @@
     <Compile Include="MessageSerializer.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="NodeActor.cs" />
+    <Compile Include="NodeConfiguration.cs" />
     <Compile Include="NodeInfo.cs" />
+    <Compile Include="NodeServices.cs" />
     <Compile Include="OutgoingSocket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoutingTable.cs" />
