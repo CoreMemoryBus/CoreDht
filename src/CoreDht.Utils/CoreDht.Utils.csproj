@@ -70,6 +70,8 @@
     <Compile Include="Hashing\Sha256HashingService.cs" />
     <Compile Include="ICorrelationIdFactory.cs" />
     <Compile Include="IDnsProvider.cs" />
+    <Compile Include="IMessageSerializer.cs" />
+    <Compile Include="MessageSerializer.cs" />
     <Compile Include="Messages\IInternalMessage.cs" />
     <Compile Include="IPublisher.cs" />
     <Compile Include="IRandomNumberGenerator.cs" />
