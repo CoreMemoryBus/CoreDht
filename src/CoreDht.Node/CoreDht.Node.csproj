@@ -63,14 +63,12 @@
   <ItemGroup>
     <Compile Include="ChordRoutingTable.cs" />
     <Compile Include="IMessageBus.cs" />
-    <Compile Include="IMessageSerializer.cs" />
     <Compile Include="INodeActor.cs" />
     <Compile Include="INodeMarshaller.cs" />
     <Compile Include="INodeMarshallerFactory.cs" />
     <Compile Include="INodeSocketFactory.cs" />
     <Compile Include="InProcNodeSocketFactory.cs" />
     <Compile Include="ISocketCache.cs" />
-    <Compile Include="MessageSerializer.cs" />
     <Compile Include="Messages\IPointToPointMessage.cs" />
     <Compile Include="Messages\PointToPointMessage.cs" />
     <Compile Include="Node.cs" />

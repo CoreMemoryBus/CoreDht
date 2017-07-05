@@ -1,4 +1,6 @@
-﻿namespace CoreDht.Node
+﻿using CoreDht.Utils;
+
+namespace CoreDht.Node
 {
     public class NodeMarshallerFactory : INodeMarshallerFactory
     {

@@ -9,9 +9,9 @@ namespace SimpleCircularNetwork
     /// </summary>
     public class EightBitHashingService : IConsistentHashingService
     {
-        public ConsistentHash GetConsistentHash(string key)
+        public ConsistentHash GetConsistentHash(string key, string salt = "")
         {
-            var basicHash = key.GetHashCode();
+            var basicHash = (key + salt).GetHashCode();
             var hash = Math.Abs(basicHash)%256;
             return new ConsistentHash(new [] {(byte)(hash) } );
         }
