@@ -11,16 +11,18 @@ namespace CoreDht.Node
     /// </summary>
     public class OutgoingSocket : IDisposable, IOutgoingSocket
     {
-        private readonly IUtcClock _clock;
+        public string HostAndPort { get; }
         public IOutgoingSocket Socket { get; }
+        private readonly IUtcClock _clock;
         public bool Error { get; private set; }
 
         public DateTime LastTransmission { get; private set; }
 
-        public OutgoingSocket(DealerSocket socket, IUtcClock clock)
+        public OutgoingSocket(string hostAndPort, DealerSocket socket, IUtcClock clock)
         {
-            _clock = clock;
+            HostAndPort = hostAndPort;
             Socket = socket;
+            _clock = clock;
         }
 
         public OutgoingSocket(INodeActor actorSocket, IUtcClock clock)

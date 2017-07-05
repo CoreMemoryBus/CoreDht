@@ -10,7 +10,7 @@ namespace CoreDht.Node
 
         public SocketCache(INodeSocketFactory socketFactory, IUtcClock clock)
         {
-            Factory = key => new OutgoingSocket(socketFactory.CreateForwardingSocket(key), clock);
+            Factory = key => new OutgoingSocket(key, socketFactory.CreateForwardingSocket(key), clock);
             _clock = clock;
         }
 
