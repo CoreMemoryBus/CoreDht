@@ -2,6 +2,7 @@
 using CoreDht.Node;
 using CoreDht.Utils;
 using CoreDht.Utils.Hashing;
+using CoreDht.Utils.Messages;
 using CoreMemoryBus;
 using CoreMemoryBus.Messages;
 using CoreMemoryBus.Messaging;

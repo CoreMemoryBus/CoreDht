@@ -7,16 +7,16 @@ namespace FirstExample
 {
     public class MyAppNode : Node
     {
-        public class DefaultServices : DefaultInprocNodeServices
+        public class MyServices : DefaultInprocNodeServices
         {
-            public DefaultServices()
+            public MyServices()
             {
                 Logger = Console.WriteLine;
             }
         }
 
         public MyAppNode(string hostAndPort, string identifier)
-            : base(hostAndPort, identifier, new DefaultNodeConfiguration(), new DefaultServices())
+            : base(hostAndPort, identifier, new DefaultNodeConfiguration(), new MyServices())
         {
             Actor.Start();
         }

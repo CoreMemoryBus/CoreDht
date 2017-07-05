@@ -1,6 +1,6 @@
 ﻿using CoreDht.Utils.Hashing;
 
-namespace CoreDht.Utils
+namespace CoreDht.Utils.Messages
 {
     public interface IRoutableMessage
     {
