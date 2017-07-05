@@ -34,10 +34,11 @@ namespace CoreDht.Node
         {
             try
             {
-                // If we record the time, we can potentially exclude this socket from a heartbeat 
-                // if it took part in a recent transmission to save bandwidth
+                // If we record the time, we can exclude this socket from a heartbeat 
+                // if it took part in a recent transmission (to save bandwidth)
+                var result = Socket.TrySend(ref msg, timeout, more);
                 LastTransmission = _clock.Now;
-                return Socket.TrySend(ref msg, timeout, more);
+                return result;
             }
             catch (Exception e) // Change this to specific type
             {
