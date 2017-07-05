@@ -12,9 +12,9 @@ namespace CoreDht.Utils.Hashing
             _algo = algo;
         }
 
-        public ConsistentHash GetConsistentHash(string key)
+        public ConsistentHash GetConsistentHash(string key, string salt = "")
         {
-            byte[] bytes = Encoding.ASCII.GetBytes(key);
+            byte[] bytes = Encoding.ASCII.GetBytes(key + salt);
             bytes = _algo.ComputeHash(bytes);
             return new ConsistentHash(bytes);
         }

@@ -2,6 +2,6 @@ namespace CoreDht.Utils.Hashing
 {
     public interface IConsistentHashingService
     {
-        ConsistentHash GetConsistentHash(string key);
+        ConsistentHash GetConsistentHash(string key, string salt = "");
     }
 }
