@@ -11,7 +11,7 @@ namespace CoreDht.Node
         public const string PointToPointMessage = "PP";
         public const string RoutableMessage = "RM";
 
-        private const int PayloadFrameIndex = 1;
+        private const int InternalPayloadFrameIndex = 1;
 
         private readonly IMessageSerializer _serializer;
 
@@ -34,7 +34,7 @@ namespace CoreDht.Node
 
         public void Unmarshall(NetMQMessage mqMessage, out Message result)
         {
-            result = _serializer.Deserialize<Message>(json: mqMessage[PayloadFrameIndex].ConvertToString());
+            result = _serializer.Deserialize<Message>(json: mqMessage[InternalPayloadFrameIndex].ConvertToString());
         }
 
         public void Send(Message msg, IOutgoingSocket actorSocket)
