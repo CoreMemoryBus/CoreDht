@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using CoreDht.Utils;
-using NetMQ;
 
 namespace CoreDht.Node
 {
@@ -9,9 +8,9 @@ namespace CoreDht.Node
     {
         private readonly IUtcClock _clock;
 
-        public SocketCache(INodeSocketFactory socketFactory, IUtcClock clock) :
-            base(key => new OutgoingSocket(socketFactory.CreateForwardingSocket(key), clock))
+        public SocketCache(INodeSocketFactory socketFactory, IUtcClock clock)
         {
+            Factory = key => new OutgoingSocket(socketFactory.CreateForwardingSocket(key), clock);
             _clock = clock;
         }
 
