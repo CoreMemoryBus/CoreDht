@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using CoreDht.Node;
 using CoreDht.Utils;
 using CoreDht.Utils.Hashing;
-using SimpleChordNetwork.Messages;
+using SimpleNetworkCommon;
+using SimpleNetworkCommon.Messages;
 
 namespace SimpleChordNetwork
 {

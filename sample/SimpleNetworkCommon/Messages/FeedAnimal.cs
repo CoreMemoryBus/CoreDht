@@ -1,8 +1,7 @@
 ﻿using CoreDht.Utils.Hashing;
 using CoreDht.Utils.Messages;
-using CoreMemoryBus.Messages;
 
-namespace SimpleChordNetwork.Messages
+namespace SimpleNetworkCommon.Messages
 {
     public class FeedAnimal : RoutableMessage, IRoutingTechnique
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using CoreDht.Utils.Hashing;
 
-namespace SimpleChordNetwork
+namespace SimpleNetworkCommon
 {
     /// <summary>
     /// This service will create a hash value with values ranging from 0-255. 

@@ -1,4 +1,4 @@
-namespace SimpleChordNetwork
+namespace SimpleNetworkCommon
 {
     /// <summary>
     /// This collaction of animals (Keys) has been secretly crafted to ensure no collisions when using our EightBitHashingService

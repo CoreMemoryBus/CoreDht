@@ -1,8 +1,8 @@
 ﻿using System;
 using CoreDht.Utils;
-using SimpleChordNetwork.Messages;
+using SimpleNetworkCommon.Messages;
 
-namespace SimpleChordNetwork
+namespace SimpleNetworkCommon
 {
     public class AnimalRepository : RoutableRepository<Animal>
     {

@@ -27,8 +27,9 @@ namespace CoreDht.Node
 
         public OutgoingSocket(INodeActor actorSocket, IUtcClock clock)
         {
-            _clock = clock;
+            HostAndPort = string.Empty;
             Socket = actorSocket;
+            _clock = clock;
             _isDisposed = true; // Actor is not owned by the cache
         }
 

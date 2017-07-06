@@ -2,9 +2,9 @@ using System;
 using CoreDht.Utils.Hashing;
 using CoreMemoryBus;
 using CoreMemoryBus.Messaging;
-using SimpleChordNetwork.Messages;
+using SimpleNetworkCommon.Messages;
 
-namespace SimpleChordNetwork
+namespace SimpleNetworkCommon
 {
     public class Animal 
         : RepositoryItem<ConsistentHash>

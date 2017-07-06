@@ -1,7 +1,7 @@
 ﻿using CoreDht.Utils.Hashing;
 using CoreDht.Utils.Messages;
 
-namespace SimpleChordNetwork.Messages
+namespace SimpleNetworkCommon.Messages
 {
     public class TerminateDht : RoutableMessage
     {

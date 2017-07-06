@@ -31,6 +31,16 @@ namespace CoreDht.Node
             Actor = new NodeActor(ListeningSocket, OnReceiveMsg, (socket, ex) => {});
         }
 
+        public void Start()
+        {
+            Actor.Start();
+        }
+
+        public void Stop()
+        {
+            Actor.Stop();
+        }
+
         protected Node(string hostAndPort, string identifier, NodeServices services) 
             : this(hostAndPort, identifier, new DefaultNodeConfiguration(), services)
         { }
@@ -41,7 +51,7 @@ namespace CoreDht.Node
             switch (typeCode)
             {
                 case NetMQActor.EndShimMessage:
-                    Actor.Stop();
+                    Stop();
                     Logger?.Invoke($"Node terminating.");
                     break;
             }
@@ -59,7 +69,7 @@ namespace CoreDht.Node
                 {
                     if (Actor.IsRunning)
                     {
-                        Actor.Stop();
+                        Stop();
                     }
                     Actor.Dispose();
                     ListeningSocket.Dispose();

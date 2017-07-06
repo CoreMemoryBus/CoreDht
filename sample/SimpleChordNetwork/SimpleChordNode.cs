@@ -8,7 +8,8 @@ using CoreMemoryBus.Messages;
 using CoreMemoryBus.Messaging;
 using NetMQ;
 using NetMQ.Sockets;
-using SimpleChordNetwork.Messages;
+using SimpleNetworkCommon;
+using SimpleNetworkCommon.Messages;
 
 namespace SimpleChordNetwork
 {

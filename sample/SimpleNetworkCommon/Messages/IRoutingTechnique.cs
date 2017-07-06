@@ -1,4 +1,4 @@
-﻿namespace SimpleChordNetwork.Messages
+﻿namespace SimpleNetworkCommon.Messages
 {
     public interface IRoutingTechnique
     {

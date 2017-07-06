@@ -1,6 +1,6 @@
 ﻿using CoreMemoryBus.Messages;
 
-namespace SimpleChordNetwork.Messages
+namespace SimpleNetworkCommon.Messages
 {
     public class TerminateNode : Message
     {
