@@ -5,7 +5,22 @@
     /// </summary>
     public class NodeConfiguration
     {
+        /// <summary>
+        /// RoutingSalt is a value that is concatenated onto an identifier before hashing to consistently alter the default hashing output.
+        /// Theoretically, an address on the overlay network cannot be calculated unless you also have the salt value.
+        /// </summary>
+        public string RoutingSalt { get; set; }
+        /// <summary>
+        /// Joining the overlay network is a self-similar behaviour that could cause multiple network loops if nodes start up concurrently.
+        /// By randomizing the start times within a range we can minimise the chance of this occurance.
+        /// JoinMinWait is the lower inclusive bound of the interval in millis
+        /// </summary>
         public int JoinMinWait { get; set; }
+        /// <summary>
+        /// Joining the overlay network is a self-similar behaviour that could cause multiple network loops if nodes start up concurrently.
+        /// By randomizing the start times within a range we can minimise the chance of this occurance.
+        /// JoinMaxWait is the upper inclusive bound of the interval in millis
+        /// </summary>
         public int JoinMaxWait { get; set; }
     }
 
