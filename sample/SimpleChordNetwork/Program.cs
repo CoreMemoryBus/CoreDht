@@ -94,6 +94,11 @@ namespace SimpleChordNetwork
                             break;
                         }
                     }
+                    // if nothing was found (wraparound)
+                    if (entries[i] == null)
+                    {
+                        entries[i] = new RoutingTableEntry(startEntryHash, nodes[0].Identity);
+                    }
                 }
 
                 nodes[nodeIndex].RoutingTable.Copy(entries);
