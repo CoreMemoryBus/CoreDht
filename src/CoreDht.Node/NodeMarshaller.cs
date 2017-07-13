@@ -69,6 +69,7 @@ namespace CoreDht.Node
             forwardingSocket.SendMultipartMessage(mqMsg);
         }
 
+
         public NetMQMessage Marshall(RoutableMessage msg)
         {
             var json = _serializer.Serialize(msg);
@@ -82,6 +83,7 @@ namespace CoreDht.Node
             return result;
         }
 
+        public const int RoutableFrameHashIndex = 1;
         const int RoutableFramePayloadIndex = 2;
 
         public void Unmarshall(NetMQMessage mqMessage, out RoutableMessage result)

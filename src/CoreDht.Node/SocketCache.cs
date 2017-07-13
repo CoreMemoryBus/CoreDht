@@ -10,8 +10,8 @@ namespace CoreDht.Node
 
         public SocketCache(INodeSocketFactory socketFactory, IUtcClock clock)
         {
-            Factory = key => new OutgoingSocket(key, socketFactory.CreateForwardingSocket(key), clock);
             _clock = clock;
+            Factory = key => new OutgoingSocket(key, socketFactory.CreateForwardingSocket(key), _clock);
         }
 
         public override void Remove(string key)
@@ -38,6 +38,17 @@ namespace CoreDht.Node
             return result;
         }
 
+        /// <summary>
+        /// This function is added so local calls can be treated the same as foreign calls
+        /// </summary>
+        /// <param name="hostAndPort">local identity host and port</param>
+        /// <param name="actor">The actor socket instance for the host</param>
+        /// 
+        public void AddActor(string hostAndPort, INodeActor actor)
+        {
+            this.Cache.Add(hostAndPort, new OutgoingSocket(actor, _clock));
+        }
+
         #region IDisposable Support
 
         private bool _isDisposed = false;
@@ -56,16 +67,5 @@ namespace CoreDht.Node
         }
 
         #endregion
-
-        /// <summary>
-        /// This function is added so local calls can be treated the same as foreign calls
-        /// </summary>
-        /// <param name="hostAndPort">local identity host and port</param>
-        /// <param name="actor">The actor socket instance for the host</param>
-        /// 
-        public void AddActor(string hostAndPort, INodeActor actor)
-        {
-            this.Cache.Add(hostAndPort, new OutgoingSocket(actor, _clock));
-        }
     }
 }

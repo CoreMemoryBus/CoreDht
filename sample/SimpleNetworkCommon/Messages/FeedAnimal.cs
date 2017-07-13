@@ -8,6 +8,7 @@ namespace SimpleNetworkCommon.Messages
         public FeedAnimal(ConsistentHash routingId, string animal) : base(routingId)
         {
             Animal = animal;
+            Technique = RoutingTechnique.Chord;
         }
 
         public string Animal { get; }

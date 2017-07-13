@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4CA260AF-2922-4AFB-BEB7-A2FEFAC6549B}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{0E13D365-C996-4A1E-9F1E-0EC2F31CCB06}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CoreDht.Node</RootNamespace>
-    <AssemblyName>CoreDht.Node</AssemblyName>
+    <RootNamespace>CommunicationManager</RootNamespace>
+    <AssemblyName>CommunicationManager</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -20,8 +22,10 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,29 +34,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AsyncIO, Version=0.1.25.0, Culture=neutral, PublicKeyToken=44a94435bd6f33f8, processorArchitecture=MSIL">
+    <Reference Include="AsyncIO">
       <HintPath>..\..\packages\AsyncIO.0.1.26.0\lib\net40\AsyncIO.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="CoreMemoryBus, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="CoreMemoryBus">
       <HintPath>..\..\packages\CoreMemoryBus.1.0.7.292\lib\net452\CoreMemoryBus.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="CoreMemoryBus.Messages, Version=1.0.5.182, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="CoreMemoryBus.Messages">
       <HintPath>..\..\packages\CoreMemoryBus.Messages.1.0.5.182\lib\net45\CoreMemoryBus.Messages.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="NetMQ, Version=4.0.0.1, Culture=neutral, PublicKeyToken=a6decef4ddc58b3a, processorArchitecture=MSIL">
+    <Reference Include="NetMQ">
       <HintPath>..\..\packages\NetMQ.4.0.0.1\lib\net40\NetMQ.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,43 +60,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChordRoutingTable.cs" />
-    <Compile Include="CommunicationManager.cs" />
-    <Compile Include="CommunicationManagerFactory.cs" />
-    <Compile Include="IChordNode.cs" />
-    <Compile Include="ICommunicationManager.cs" />
-    <Compile Include="ICommunicationManagerFactory.cs" />
-    <Compile Include="IMessageBus.cs" />
-    <Compile Include="INodeActor.cs" />
-    <Compile Include="INodeMarshaller.cs" />
-    <Compile Include="INodeMarshallerFactory.cs" />
-    <Compile Include="INodeSocketFactory.cs" />
-    <Compile Include="InProcNodeSocketFactory.cs" />
-    <Compile Include="ISocketCache.cs" />
-    <Compile Include="Messages\IPointToPointMessage.cs" />
-    <Compile Include="Messages\PointToPointMessage.cs" />
-    <Compile Include="Node.cs" />
-    <Compile Include="NodeActor.cs" />
-    <Compile Include="NodeConfiguration.cs" />
-    <Compile Include="NodeInfo.cs" />
-    <Compile Include="NodeMarshaller.cs" />
-    <Compile Include="NodeMarshallerFactory.cs" />
-    <Compile Include="NodeServices.cs" />
-    <Compile Include="OutgoingSocket.cs" />
+    <Compile Include="AnimalNode.cs" />
+    <Compile Include="AnimalNodeFactory.cs" />
+    <Compile Include="NodeServicesFactory.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoutingTable.cs" />
-    <Compile Include="RoutingTableEntry.cs" />
-    <Compile Include="SocketCache.cs" />
-    <Compile Include="SuccessorTable.cs" />
-    <Compile Include="TcpNodeSocketFactory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoreDht.Utils\CoreDht.Utils.csproj">
+    <ProjectReference Include="..\..\src\CoreDht.Node\CoreDht.Node.csproj">
+      <Project>{4CA260AF-2922-4AFB-BEB7-A2FEFAC6549B}</Project>
+      <Name>CoreDht.Node</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\CoreDht.Utils\CoreDht.Utils.csproj">
       <Project>{74948831-078D-4396-98AC-92234BDCAE15}</Project>
       <Name>CoreDht.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SimpleNetworkCommon\SimpleNetworkCommon.csproj">
+      <Project>{e9302b34-744e-4b03-816d-595f72b458e5}</Project>
+      <Name>SimpleNetworkCommon</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

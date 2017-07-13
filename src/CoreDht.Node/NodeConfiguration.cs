@@ -22,6 +22,11 @@
         /// JoinMaxWait is the upper inclusive bound of the interval in millis
         /// </summary>
         public int JoinMaxWait { get; set; }
+        /// <summary>
+        /// To improve network resilience, a sequence of successors is stored, so it the immediate successor fails, then the next successor can immediately take it's place.
+        /// This configuration sets the number of successors to be stored for this contingency.
+        /// </summary>
+        public int SuccessorCount { get; set; }
     }
 
     public class DefaultNodeConfiguration : NodeConfiguration
@@ -30,6 +35,7 @@
         {
             JoinMinWait = 50;
             JoinMaxWait = 200;
+            SuccessorCount = 2;
         }
     }
 }
