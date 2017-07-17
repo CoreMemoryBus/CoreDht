@@ -21,25 +21,32 @@ namespace CoreDht.Node
         public IConsistentHashingService ConsistentHashingService { get; set; }
 
         public ICommunicationManagerFactory CommunicationManagerFactory { get; set; }
+        public IActionTimerFactory TimerFactory { get; set; }
     }
 
-    public class DefaultInprocNodeServices : NodeServices
+    public class DefaultNodeServices : NodeServices
     {
-        public DefaultInprocNodeServices()
+        public DefaultNodeServices()
         {
             Clock = new UtcClock();
-            SocketFactory = new InProcNodeSocketFactory();
+            TimerFactory = new ActionTimerFactory();
             ConsistentHashingService = new Sha1HashingService();
         }
     }
 
-    public class DefaultTcpNodeServices : NodeServices
+    public class DefaultInprocNodeServices : DefaultNodeServices
+    {
+        public DefaultInprocNodeServices()
+        {
+            SocketFactory = new InProcNodeSocketFactory();
+        }
+    }
+
+    public class DefaultTcpNodeServices : DefaultNodeServices
     {
         public DefaultTcpNodeServices()
         {
-            Clock = new UtcClock();
             SocketFactory = new TcpNodeSocketFactory();
-            ConsistentHashingService = new Sha1HashingService();
         }
     }
 }

@@ -56,7 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionScheduler.cs" />
     <Compile Include="ActionTimer.cs" />
+    <Compile Include="ActionTimerFactory.cs" />
     <Compile Include="CorrelationId.cs" />
     <Compile Include="CorrelationIdFactory.cs" />
     <Compile Include="DisposableAction.cs" />
@@ -69,7 +71,9 @@
     <Compile Include="Hashing\Md5HashingService.cs" />
     <Compile Include="Hashing\Sha1HashingService.cs" />
     <Compile Include="Hashing\Sha256HashingService.cs" />
+    <Compile Include="IActionScheduler.cs" />
     <Compile Include="IActionTimer.cs" />
+    <Compile Include="IActionTimerFactory.cs" />
     <Compile Include="ICorrelationIdFactory.cs" />
     <Compile Include="IDnsProvider.cs" />
     <Compile Include="IMessageSerializer.cs" />
@@ -81,6 +85,7 @@
     <Compile Include="IUtcClock.cs" />
     <Compile Include="MessageExtensions.cs" />
     <Compile Include="ObjectCache.cs" />
+    <Compile Include="PairingHeap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomNumberGenerator.cs" />
     <Compile Include="Messages\RoutableMessage.cs" />

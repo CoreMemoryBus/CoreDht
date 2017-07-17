@@ -11,6 +11,7 @@ namespace CoreDht.Node
     {
         public NodeConfiguration Configuration { get; }
         protected NodeServices Services { get; set; }
+        protected DisposableStack Janitor { get; }
         protected IUtcClock Clock { get; }
         protected Action<string> Logger { get; }
         protected DealerSocket ListeningSocket { get; }
@@ -20,20 +21,15 @@ namespace CoreDht.Node
         protected MemoryBus MessageBus { get; }
         private SocketCache ForwardingSockets { get; }
         protected ICommunicationManager CommunicationManager { get; }
-
-
-        public NodeInfo Successor
-        {
-            get { return Successors[0].SuccessorIdentity; }
-            protected set { Successors[0] = new RoutingTableEntry(value.RoutingHash, value); }
-        }
         protected SuccessorTable Successors { get; }
         protected ChordRoutingTable RoutingTable { get; }
+        protected NodeActionScheduler Scheduler { get; }
 
         protected Node(string hostAndPort, string identifier, NodeConfiguration configuration, NodeServices services)
         {
             Configuration = configuration;
             Services = services;
+            Janitor = new DisposableStack();
             Logger = Services.Logger;
             Clock = services.Clock;
             Identity = new NodeInfo(identifier, Services.ConsistentHashingService.GetConsistentHash(identifier), hostAndPort);
@@ -41,11 +37,21 @@ namespace CoreDht.Node
             Successors = new SuccessorTable(Identity, configuration.SuccessorCount);
             RoutingTable = new ChordRoutingTable(Identity, Identity.RoutingHash.BitCount);
             Successor = Identity;
-            ListeningSocket = Services.SocketFactory.CreateBindingSocket(hostAndPort);
-            Actor = new NodeActor(ListeningSocket, OnReceiveMsg, (socket, ex) => {});
-            ForwardingSockets = new SocketCache(services.SocketFactory, Clock);
+            ListeningSocket = Janitor.Push(Services.SocketFactory.CreateBindingSocket(hostAndPort));
+            Actor = Janitor.Push(new NodeActor(ListeningSocket, OnReceiveMsg, (socket, ex) => {}));
+            ForwardingSockets = Janitor.Push(new SocketCache(services.SocketFactory, Clock));
             MessageBus = new MemoryBus();
             CommunicationManager = Services.CommunicationManagerFactory.Create(this, ForwardingSockets, MessageBus);
+            Scheduler = Janitor.Push(new NodeActionScheduler(Clock, services.TimerFactory.CreateTimer(), CommunicationManager));
+            var timerHandler = Janitor.Push(Scheduler.CreateTimerHandler());
+            MessageBus.Subscribe(timerHandler);
+            Janitor.Push(new DisposableAction(() => MessageBus.Unsubscribe(timerHandler)));
+        }
+
+        public NodeInfo Successor
+        {
+            get { return Successors[0].SuccessorIdentity; }
+            protected set { Successors[0] = new RoutingTableEntry(value.RoutingHash, value); }
         }
 
         public void Start()
@@ -96,8 +102,7 @@ namespace CoreDht.Node
                     {
                         Stop();
                     }
-                    Actor.Dispose();
-                    ListeningSocket.Dispose();
+                    Janitor.Dispose();
                 }
 
                 _isDisposed = true;

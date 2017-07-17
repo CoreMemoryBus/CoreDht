@@ -74,9 +74,11 @@
     <Compile Include="INodeSocketFactory.cs" />
     <Compile Include="InProcNodeSocketFactory.cs" />
     <Compile Include="ISocketCache.cs" />
+    <Compile Include="Messages\Internal\TimerFired.cs" />
     <Compile Include="Messages\IPointToPointMessage.cs" />
     <Compile Include="Messages\PointToPointMessage.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="NodeActionScheduler.cs" />
     <Compile Include="NodeActor.cs" />
     <Compile Include="NodeConfiguration.cs" />
     <Compile Include="NodeInfo.cs" />
