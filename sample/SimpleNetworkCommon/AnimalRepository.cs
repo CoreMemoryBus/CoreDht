@@ -19,7 +19,7 @@ namespace SimpleNetworkCommon
         Animal CreateAnimal(FeedAnimal msg)
         {
             _logger?.Invoke($"Creating:{msg.Animal}");
-            return new Animal(msg.RoutingTarget, msg.Animal);
+            return new Animal(msg.RoutingTarget, msg.Animal, _logger);
         }
     }
 }

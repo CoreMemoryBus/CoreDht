@@ -8,8 +8,9 @@ using CoreMemoryBus.Messaging;
 namespace CoreDht.Utils
 {
     public class RoutableRepository<TRepoItem> 
-        : Repository<ConsistentHash, TRepoItem>, IHandle<Message> where TRepoItem : IPublisher
-
+        : Repository<ConsistentHash, TRepoItem>
+        , IHandle<Message> 
+        where TRepoItem : IPublisher
     {
         protected RoutableRepository(Func<Message, TRepoItem> repoItemFactory = null) : base(repoItemFactory)
         { }
