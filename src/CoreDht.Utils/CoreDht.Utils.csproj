@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionTimer.cs" />
     <Compile Include="CorrelationId.cs" />
     <Compile Include="CorrelationIdFactory.cs" />
     <Compile Include="DisposableAction.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Hashing\Md5HashingService.cs" />
     <Compile Include="Hashing\Sha1HashingService.cs" />
     <Compile Include="Hashing\Sha256HashingService.cs" />
+    <Compile Include="IActionTimer.cs" />
     <Compile Include="ICorrelationIdFactory.cs" />
     <Compile Include="IDnsProvider.cs" />
     <Compile Include="IMessageSerializer.cs" />
