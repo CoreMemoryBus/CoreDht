@@ -27,6 +27,15 @@
         /// This configuration sets the number of successors to be stored for this contingency.
         /// </summary>
         public int SuccessorCount { get; set; }
+        /// <summary>
+        /// AwaitTimeout is the time in milliseconds to wait for an operation to complete before timing out. In practice, the reply handler will be removed from the message bus 
+        /// thus ignoring the reply.
+        /// </summary>
+        public int AwaitTimeout { get; set; }
+        /// <summary>
+        /// AckTimeout is the time in milliseconds a time sensitive operation is extended by before timing out.
+        /// </summary>
+        public int AckTimeout { get; set; }
     }
 
     public class DefaultNodeConfiguration : NodeConfiguration
@@ -35,7 +44,9 @@
         {
             JoinMinWait = 50;
             JoinMaxWait = 200;
-            SuccessorCount = 2;
+            SuccessorCount = 1;
+            AwaitTimeout = 200;
+            AckTimeout = 50;
         }
     }
 }

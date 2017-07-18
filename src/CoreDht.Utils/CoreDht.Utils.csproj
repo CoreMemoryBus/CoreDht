@@ -63,6 +63,7 @@
     <Compile Include="CorrelationIdFactory.cs" />
     <Compile Include="DisposableAction.cs" />
     <Compile Include="DisposableStack.cs" />
+    <Compile Include="ExpiryTimeCalculator.cs" />
     <Compile Include="Hashing\ConsistentHashExtensions.cs" />
     <Compile Include="Hashing\ConsistentHash.cs" />
     <Compile Include="DnsProvider.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="IActionTimerFactory.cs" />
     <Compile Include="ICorrelationIdFactory.cs" />
     <Compile Include="IDnsProvider.cs" />
+    <Compile Include="IExpiryTimeCalculator.cs" />
     <Compile Include="IMessageSerializer.cs" />
     <Compile Include="MessageSerializer.cs" />
     <Compile Include="Messages\IInternalMessage.cs" />

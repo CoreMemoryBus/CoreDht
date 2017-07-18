@@ -22,6 +22,10 @@ namespace CoreDht.Node
 
         public ICommunicationManagerFactory CommunicationManagerFactory { get; set; }
         public IActionTimerFactory TimerFactory { get; set; }
+        /// <summary>
+        /// The ExpiryTimeCalculator is used to calculate the expiry time of events and ephemeral messages.
+        /// </summary>
+        public IExpiryTimeCalculator ExpiryTimeCalculator { get; set; }
     }
 
     public class DefaultNodeServices : NodeServices
@@ -31,6 +35,7 @@ namespace CoreDht.Node
             Clock = new UtcClock();
             TimerFactory = new ActionTimerFactory();
             ConsistentHashingService = new Sha1HashingService();
+            ExpiryTimeCalculator = new ExpiryTimeCalculator(Clock);
         }
     }
 
