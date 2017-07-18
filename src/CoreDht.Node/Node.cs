@@ -7,7 +7,7 @@ using NetMQ.Sockets;
 
 namespace CoreDht.Node
 {
-    public class Node : IDisposable, IChordNode
+    public partial class Node : IDisposable, IChordNode
     {
         public NodeConfiguration Configuration { get; }
         protected NodeServices Services { get; set; }
@@ -46,6 +46,7 @@ namespace CoreDht.Node
             var timerHandler = Janitor.Push(Scheduler.CreateTimerHandler());
             MessageBus.Subscribe(timerHandler);
             Janitor.Push(new DisposableAction(() => MessageBus.Unsubscribe(timerHandler)));
+            MessageBus.Subscribe(new TerminateHandler(this));
         }
 
         public NodeInfo Successor
