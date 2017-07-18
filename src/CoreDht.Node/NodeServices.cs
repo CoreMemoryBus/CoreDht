@@ -26,6 +26,11 @@ namespace CoreDht.Node
         /// The ExpiryTimeCalculator is used to calculate the expiry time of events and ephemeral messages.
         /// </summary>
         public IExpiryTimeCalculator ExpiryTimeCalculator { get; set; }
+        /// <summary>
+        /// Sometimes collections of messages pertain to a common subject. A CorrelationId helps identify the common subject between them. 
+        /// The CorrelationIdFactory generates unique Id's that are used to identify the common subject.
+        /// </summary>
+        public ICorrelationIdFactory CorrelationIdFactory { get; set; }
     }
 
     public class DefaultNodeServices : NodeServices
@@ -36,6 +41,7 @@ namespace CoreDht.Node
             TimerFactory = new ActionTimerFactory();
             ConsistentHashingService = new Sha1HashingService();
             ExpiryTimeCalculator = new ExpiryTimeCalculator(Clock);
+            CorrelationIdFactory = new CorrelationIdFactory();
         }
     }
 

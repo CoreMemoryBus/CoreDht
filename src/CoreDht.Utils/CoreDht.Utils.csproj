@@ -75,6 +75,7 @@
     <Compile Include="IActionScheduler.cs" />
     <Compile Include="IActionTimer.cs" />
     <Compile Include="IActionTimerFactory.cs" />
+    <Compile Include="ICorrelationFactory.cs" />
     <Compile Include="ICorrelationIdFactory.cs" />
     <Compile Include="IDnsProvider.cs" />
     <Compile Include="IExpiryTimeCalculator.cs" />

@@ -54,7 +54,6 @@ namespace CoreDht.Node
             : this(hostAndPort, identifier, new DefaultNodeConfiguration(), services)
         { }
 
-
         public NodeInfo Successor
         {
             get { return Successors[0].SuccessorIdentity; }
