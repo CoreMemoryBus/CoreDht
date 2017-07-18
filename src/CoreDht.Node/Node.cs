@@ -1,4 +1,5 @@
 ﻿using System;
+using CoreDht.Node.Messages.Internal;
 using CoreDht.Utils;
 using CoreDht.Utils.Hashing;
 using CoreMemoryBus.Messaging;
@@ -46,8 +47,13 @@ namespace CoreDht.Node
             var timerHandler = Janitor.Push(Scheduler.CreateTimerHandler());
             MessageBus.Subscribe(timerHandler);
             Janitor.Push(new DisposableAction(() => MessageBus.Unsubscribe(timerHandler)));
-            MessageBus.Subscribe(new TerminateHandler(this));
+            MessageBus.Subscribe(new LifetimeHandler(this));
         }
+
+        protected Node(string hostAndPort, string identifier, NodeServices services)
+            : this(hostAndPort, identifier, new DefaultNodeConfiguration(), services)
+        { }
+
 
         public NodeInfo Successor
         {
@@ -57,17 +63,21 @@ namespace CoreDht.Node
 
         public void Start()
         {
+            Initialize();
             Actor.Start();
+            CommunicationManager.SendInternal(new NodeInitialised());
         }
+
+        protected virtual void Initialize()
+        { }
+
+        protected virtual void OnInitialised()
+        { }
 
         public void Stop()
         {
             Actor.Stop();
         }
-
-        protected Node(string hostAndPort, string identifier, NodeServices services) 
-            : this(hostAndPort, identifier, new DefaultNodeConfiguration(), services)
-        { }
 
         void OnReceiveMsg(NetMQMessage msg)
         {
@@ -114,7 +124,6 @@ namespace CoreDht.Node
         {
             Dispose(true);
         }
-
 
         #endregion
     }
