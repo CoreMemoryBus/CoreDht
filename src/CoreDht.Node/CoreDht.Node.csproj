@@ -61,6 +61,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AwaitAllResponsesHandler.cs" />
+    <Compile Include="AwaitHandler.cs" />
     <Compile Include="ChordRoutingTable.cs" />
     <Compile Include="CommunicationManager.cs" />
     <Compile Include="CommunicationManagerFactory.cs" />
