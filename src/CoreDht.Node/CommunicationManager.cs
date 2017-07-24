@@ -1,4 +1,5 @@
 ﻿using CoreDht.Node.Messages;
+using CoreDht.Utils;
 using CoreDht.Utils.Hashing;
 using CoreDht.Utils.Messages;
 using CoreMemoryBus.Messages;
@@ -41,6 +42,14 @@ namespace CoreDht.Node
             var mqMsg = _marshaller.Marshall(msg);
             forwardingSocket.SendMultipartMessage(mqMsg);
         }
+
+        public void SendAck(IPointToPointMessage originatingMessage, CorrelationId correlation)
+        {
+            // Send an interim reply to verify the health of the network
+            var replySocket = _socketCache[originatingMessage.From.HostAndPort];
+            _marshaller.Send(new AckMessage(correlation), replySocket);
+        }
+
 
         public void Receive(NetMQMessage mqMsg)
         {

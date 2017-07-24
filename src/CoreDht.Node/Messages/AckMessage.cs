@@ -5,8 +5,7 @@ namespace CoreDht.Node.Messages
 {
     /// <summary>
     /// An AckMessage (and derived messages) is sent in response to a time sensitive message. 
-    /// On receipt, it will typically extend a timeout and help in verifying 
-    /// the health of a connection.
+    /// On receipt, it will extend the timeout and help in verifying the health of a connection.
     /// </summary>
     public class AckMessage : Message, ICorrelatedMessage<CorrelationId>
     {
