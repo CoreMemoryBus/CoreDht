@@ -1,4 +1,6 @@
-﻿namespace CoreDht.Node
+﻿using System.Threading;
+
+namespace CoreDht.Node
 {
     /// <summary>
     /// This is a collection of settings common to all nodes within the network
@@ -36,6 +38,14 @@
         /// AckTimeout is the time in milliseconds a time sensitive operation is extended by before timing out.
         /// </summary>
         public int AckTimeout { get; set; }
+        /// <summary>
+        /// To be deprecated. We'll switch this over to a multicast beacon.
+        /// To connect 
+        /// </summary>
+        public string SeedNodeIdentity { get; set; }
+
+        public int RetryTimeout { get; set; }
+        public int RetryCount { get; set; }
     }
 
     public class DefaultNodeConfiguration : NodeConfiguration
@@ -47,6 +57,8 @@
             SuccessorCount = 1;
             AwaitTimeout = 200;
             AckTimeout = 50;
+            RetryTimeout = Timeout.Infinite;
+            RetryCount = CoreDht.Node.RetryCount.Infinite;
         }
     }
 }

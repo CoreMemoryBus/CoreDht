@@ -8,28 +8,40 @@ using CoreMemoryBus.Messages;
 
 namespace CoreDht.Node
 {
-    public class AwaitAllResponsesHandler
+    public class InlineResponseHandler
         : AwaitHandler
         , IHandle<Message>
+        , IHandle<RetryAction>
         , IHandle<CancelOperation>
         , IHandle<OperationComplete>
     {
         private Action _initAction;
+        private readonly int _retryCount;
+        private RetryOperation _retryFunction;
+        private Func<CorrelationId, RetryOperation> _retryFactory = c => null;
         private Action _continuation;
         private CorrelationId _parentCorrelation;
         private readonly Dictionary<CorrelationId, IResponseAction> _responseActions = new Dictionary<CorrelationId, IResponseAction>();
 
-        public AwaitAllResponsesHandler(IMessageBus messageBus, Action<string> logger)
+        public InlineResponseHandler(IMessageBus messageBus, Action<string> logger, int retryCount = RetryCount.None)
             : base(messageBus, logger)
-        { }
+        {
+            _retryCount = retryCount;
+        }
 
-        public AwaitAllResponsesHandler PerformAction(Action initAction)
+        public InlineResponseHandler PerformAction(Action initAction)
         {
             _initAction = initAction;
             return this;
         }
 
-        public AwaitAllResponsesHandler AndAwait<TResponse>(CorrelationId correlationId, Action<TResponse> responseCallback)
+        public InlineResponseHandler PerformRetryAction(Action retryAction)
+        {
+            _retryFactory = c => new RetryOperation(MessageBus, c, retryAction, _retryCount);
+            return this;
+        }
+
+        public InlineResponseHandler AndAwait<TResponse>(CorrelationId correlationId, Action<TResponse> responseCallback)
             where TResponse : Message, ICorrelatedMessage<CorrelationId>
         {
             _responseActions[correlationId] = new ResponseAction<TResponse>(responseCallback);
@@ -38,7 +50,7 @@ namespace CoreDht.Node
             return this;
         }
 
-        public AwaitAllResponsesHandler AndAwaitAll<TResponse>(CorrelationId[] correlationIds, Action<TResponse> responseCallback)
+        public InlineResponseHandler AndAwaitAll<TResponse>(CorrelationId[] correlationIds, Action<TResponse> responseCallback)
             where TResponse : Message, ICorrelatedMessage<CorrelationId>
         {
             foreach (var correlationId in correlationIds)
@@ -52,11 +64,13 @@ namespace CoreDht.Node
             return this;
         }
 
-        public AwaitAllResponsesHandler ContinueWith(Action continuation)
+        public InlineResponseHandler ContinueWith(Action continuation)
         {
             _continuation = continuation;
             return this;
         }
+
+        private RetryOperation RetryFunction => _retryFunction ?? (_retryFunction = _retryFactory.Invoke(_parentCorrelation));
 
         public void Run(CorrelationId parentCorrelation)
         {
@@ -66,6 +80,7 @@ namespace CoreDht.Node
             MessageBus.Subscribe(this);
 
             _initAction?.Invoke();
+            RetryFunction?.Invoke();
         }
 
         public void Run(CorrelationId parentCorrelation, int timeoutMs)
@@ -76,12 +91,19 @@ namespace CoreDht.Node
             MessageBus.Subscribe(this);
 
             _initAction?.Invoke();
+            RetryFunction?.Invoke();
         }
+
+        private static readonly Type[] IgnoreTypes = new Type[3]
+            {
+                typeof (CancelOperation),
+                typeof (OperationComplete),
+                typeof (RetryAction)
+            };
 
         public void Handle(Message message)
         {
-            if (message.GetType() != typeof(CancelOperation) ||
-                message.GetType() != typeof(OperationComplete))
+            if (!IgnoreTypes.Contains(message.GetType()))
             {
                 var correlatedMessage = message as ICorrelatedMessage<CorrelationId>;
                 if (correlatedMessage != null)
@@ -98,6 +120,11 @@ namespace CoreDht.Node
                     }
                 }
             }
+        }
+
+        public void Handle(RetryAction message)
+        {
+           RetryFunction?.Invoke();
         }
 
         public void Handle(CancelOperation message)

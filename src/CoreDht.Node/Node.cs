@@ -48,6 +48,7 @@ namespace CoreDht.Node
             MessageBus.Subscribe(timerHandler);
             Janitor.Push(new DisposableAction(() => MessageBus.Unsubscribe(timerHandler)));
             MessageBus.Subscribe(new LifetimeHandler(this));
+            MessageBus.Subscribe(new AwaitAckRetryHandler(Scheduler, Services.ExpiryTimeCalculator, CommunicationManager, Logger, Configuration));
         }
 
         protected Node(string hostAndPort, string identifier, NodeServices services)
