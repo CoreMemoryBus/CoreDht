@@ -31,6 +31,11 @@ namespace CoreDht.Node
         /// The CorrelationIdFactory generates unique Id's that are used to identify the common subject.
         /// </summary>
         public ICorrelationIdFactory CorrelationIdFactory { get; set; }
+        /// <summary>
+        /// We introduce a RandomNUmberGenerator typically for "self similar" operations to ensure that such detrimental effects can be avoided 
+        /// by introducing an element of random behaviour.
+        /// </summary>
+        public IRandomNumberGenerator RandomNumberGenerator { get; set; }
     }
 
     public class DefaultNodeServices : NodeServices
@@ -40,8 +45,9 @@ namespace CoreDht.Node
             Clock = new UtcClock();
             TimerFactory = new ActionTimerFactory();
             ConsistentHashingService = new Sha1HashingService();
-            ExpiryTimeCalculator = new ExpiryTimeCalculator(Clock);
             CorrelationIdFactory = new CorrelationIdFactory();
+            RandomNumberGenerator = new RandomNumberGenerator(CorrelationIdFactory);
+            ExpiryTimeCalculator = new ExpiryTimeCalculator(Clock, RandomNumberGenerator);
         }
     }
 
