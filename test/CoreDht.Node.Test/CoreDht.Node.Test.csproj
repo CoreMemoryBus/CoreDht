@@ -30,6 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CoreMemoryBus, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CoreMemoryBus.1.0.7.292\lib\net452\CoreMemoryBus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CoreMemoryBus.Messages, Version=1.0.5.182, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CoreMemoryBus.Messages.1.0.5.182\lib\net45\CoreMemoryBus.Messages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.3.7.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
@@ -44,8 +52,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InlineResponseHandlerFixture.cs" />
     <Compile Include="NodeFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RetryOperationHandlerFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -54,6 +64,10 @@
     <ProjectReference Include="..\..\src\CoreDht.Node\CoreDht.Node.csproj">
       <Project>{4CA260AF-2922-4AFB-BEB7-A2FEFAC6549B}</Project>
       <Name>CoreDht.Node</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\CoreDht.Utils\CoreDht.Utils.csproj">
+      <Project>{74948831-078D-4396-98AC-92234BDCAE15}</Project>
+      <Name>CoreDht.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

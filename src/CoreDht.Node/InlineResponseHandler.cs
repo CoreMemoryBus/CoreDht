@@ -5,42 +5,49 @@ using CoreDht.Node.Messages.Internal;
 using CoreDht.Utils;
 using CoreMemoryBus;
 using CoreMemoryBus.Messages;
+using CoreMemoryBus.Messaging;
 
 namespace CoreDht.Node
 {
+    /// <summary>
+    /// InlineReponseHandler orchestrates complex request, retry and response operations using a simple fluent syntax. The handler manages all intermediate state while waiting 
+    /// for responses and will remove itself from the message bus when complete. Operations may cancel as a result of a timeout or may need to be re-attempted as the target cannot process
+    /// a particular message at the nominated time. Check cases for broken connections as well as timeouts.
+    /// </summary>
     public class InlineResponseHandler
         : AwaitHandler
         , IHandle<Message>
-        , IHandle<RetryAction>
         , IHandle<CancelOperation>
         , IHandle<OperationComplete>
     {
         private Action _initAction;
-        private readonly int _retryCount;
-        private RetryOperation _retryFunction;
-        private Func<CorrelationId, RetryOperation> _retryFactory = c => null;
         private Action _continuation;
+        private Action _finalAction;
         private CorrelationId _parentCorrelation;
         private readonly Dictionary<CorrelationId, IResponseAction> _responseActions = new Dictionary<CorrelationId, IResponseAction>();
 
-        public InlineResponseHandler(IMessageBus messageBus, Action<string> logger, int retryCount = RetryCount.None)
+        public InlineResponseHandler(MemoryBus messageBus, Action<string> logger)
             : base(messageBus, logger)
-        {
-            _retryCount = retryCount;
-        }
+        {}
 
+        /// <summary>
+        /// Perform an action (typically the sending of 1 or more messages) and then await a response.
+        /// </summary>
+        /// <param name="initAction"></param>
+        /// <returns></returns>
         public InlineResponseHandler PerformAction(Action initAction)
         {
             _initAction = initAction;
             return this;
         }
 
-        public InlineResponseHandler PerformRetryAction(Action retryAction)
-        {
-            _retryFactory = c => new RetryOperation(MessageBus, c, retryAction, _retryCount);
-            return this;
-        }
-
+        /// <summary>
+        /// Await a single correlated response before continuing.
+        /// </summary>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <param name="correlationId"></param>
+        /// <param name="responseCallback"></param>
+        /// <returns></returns>
         public InlineResponseHandler AndAwait<TResponse>(CorrelationId correlationId, Action<TResponse> responseCallback)
             where TResponse : Message, ICorrelatedMessage<CorrelationId>
         {
@@ -50,6 +57,14 @@ namespace CoreDht.Node
             return this;
         }
 
+
+        /// <summary>
+        /// Await a collection of responses (typically from a fan-out operation) before continuing. The collelationIds are always new "child" correlations.
+        /// </summary>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <param name="correlationIds"></param>
+        /// <param name="responseCallback"></param>
+        /// <returns></returns>
         public InlineResponseHandler AndAwaitAll<TResponse>(CorrelationId[] correlationIds, Action<TResponse> responseCallback)
             where TResponse : Message, ICorrelatedMessage<CorrelationId>
         {
@@ -64,14 +79,33 @@ namespace CoreDht.Node
             return this;
         }
 
+        /// <summary>
+        /// Define a function to be called after the successful response invocation.
+        /// </summary>
+        /// <param name="continuation"></param>
+        /// <returns></returns>
         public InlineResponseHandler ContinueWith(Action continuation)
         {
             _continuation = continuation;
             return this;
         }
 
-        private RetryOperation RetryFunction => _retryFunction ?? (_retryFunction = _retryFactory.Invoke(_parentCorrelation));
+        /// <summary>
+        /// Define a function to be called during a timeout or a successful operation at the close of the handler.
+        /// </summary>
+        /// <param name="finalAction"></param>
+        /// <returns></returns>
+        public InlineResponseHandler AndFinally(Action finalAction)
+        {
+            _finalAction = finalAction;
+            return this;
+        }
 
+        /// <summary>
+        /// Run the initial action to kick off the request/reply sequence. A correlated AwaitMessage is sent to the message bus
+        /// so remotely posted AckMessages may extend a standard operation timeout.
+        /// </summary>
+        /// <param name="parentCorrelation"></param>
         public void Run(CorrelationId parentCorrelation)
         {
             _parentCorrelation = parentCorrelation;
@@ -80,9 +114,14 @@ namespace CoreDht.Node
             MessageBus.Subscribe(this);
 
             _initAction?.Invoke();
-            RetryFunction?.Invoke();
         }
 
+
+        /// <summary>
+        /// Run the initial action to kick off the request/reply sequence. A correlated AwaitMessage is sent to the message bus
+        /// so remotely posted AckMessages may extend a user defined timeout.
+        /// </summary>
+        /// <param name="parentCorrelation"></param>
         public void Run(CorrelationId parentCorrelation, int timeoutMs)
         {
             _parentCorrelation = parentCorrelation;
@@ -91,14 +130,12 @@ namespace CoreDht.Node
             MessageBus.Subscribe(this);
 
             _initAction?.Invoke();
-            RetryFunction?.Invoke();
         }
 
-        private static readonly Type[] IgnoreTypes = new Type[3]
+        private static readonly Type[] IgnoreTypes = 
             {
                 typeof (CancelOperation),
                 typeof (OperationComplete),
-                typeof (RetryAction)
             };
 
         public void Handle(Message message)
@@ -122,11 +159,6 @@ namespace CoreDht.Node
             }
         }
 
-        public void Handle(RetryAction message)
-        {
-           RetryFunction?.Invoke();
-        }
-
         public void Handle(CancelOperation message)
         {
             if (message.CorrelationId.Equals(_parentCorrelation))
@@ -135,6 +167,8 @@ namespace CoreDht.Node
 
                 var operationIds = from opIds in _responseActions.Keys select $"{opIds}";
                 Logger?.Invoke($"Cancel Operations\n\tId:{string.Join("\n\tId:", operationIds)}");
+
+                _finalAction?.Invoke();
             }
         }
 
@@ -145,6 +179,8 @@ namespace CoreDht.Node
                 MessageBus.Unsubscribe(this);
 
                 Logger?.Invoke($"Operation Complete Id:{message.CorrelationId}");
+
+                _finalAction?.Invoke();
             }
         }
     }

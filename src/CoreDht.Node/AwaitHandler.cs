@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Policy;
 using CoreMemoryBus.Messages;
 using CoreMemoryBus.Messaging;
 
@@ -10,10 +9,10 @@ namespace CoreDht.Node
     /// </summary>
     public class AwaitHandler
     {
-        protected readonly IMessageBus MessageBus;
+        protected readonly MemoryBus MessageBus;
         protected readonly Action<string> Logger;
 
-        protected AwaitHandler(IMessageBus messageBus, Action<string> logger)
+        protected AwaitHandler(MemoryBus messageBus, Action<string> logger)
         {
             MessageBus = messageBus;
             Logger = logger;

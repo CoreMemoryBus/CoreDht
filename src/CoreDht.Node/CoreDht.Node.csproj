@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InlineMessageHandler.cs" />
     <Compile Include="Messages\Internal\ScheduleRetryAction.cs" />
     <Compile Include="Node.AwaitAckRetryHandler.cs" />
     <Compile Include="InlineResponseHandler.cs" />
@@ -101,7 +102,7 @@
     <Compile Include="NodeServices.cs" />
     <Compile Include="OutgoingSocket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RetryOperation.cs" />
+    <Compile Include="RetryOperationHandler.cs" />
     <Compile Include="RetryCount.cs" />
     <Compile Include="RoutingTable.cs" />
     <Compile Include="RoutingTableEntry.cs" />
