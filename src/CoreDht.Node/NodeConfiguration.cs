@@ -15,15 +15,15 @@ namespace CoreDht.Node
         /// <summary>
         /// Joining the overlay network is a self-similar behaviour that could cause multiple network loops if nodes start up concurrently.
         /// By randomizing the start times within a range we can minimise the chance of this occurance.
-        /// JoinMinWait is the lower inclusive bound of the interval in millis
+        /// JoinWaitMin is the lower inclusive bound of the interval in millis
         /// </summary>
-        public int JoinMinWait { get; set; }
+        public int JoinWaitMin { get; set; }
         /// <summary>
         /// Joining the overlay network is a self-similar behaviour that could cause multiple network loops if nodes start up concurrently.
         /// By randomizing the start times within a range we can minimise the chance of this occurance.
-        /// JoinMaxWait is the upper inclusive bound of the interval in millis
+        /// JoinWaitVariation is the random variation above the minimum wait of the interval in millis
         /// </summary>
-        public int JoinMaxWait { get; set; }
+        public int JoinWaitVariation { get; set; }
         /// <summary>
         /// To improve network resilience, a sequence of successors is stored, so it the immediate successor fails, then the next successor can immediately take it's place.
         /// This configuration sets the number of successors to be stored for this contingency.
@@ -42,7 +42,7 @@ namespace CoreDht.Node
         /// To be deprecated. We'll switch this over to a multicast beacon.
         /// To connect 
         /// </summary>
-        public string SeedNodeIdentity { get; set; }
+        public NodeInfo SeedNodeIdentity { get; set; }
 
         public int RetryTimeout { get; set; }
         public int RetryCount { get; set; }
@@ -52,8 +52,8 @@ namespace CoreDht.Node
     {
         public DefaultNodeConfiguration()
         {
-            JoinMinWait = 50;
-            JoinMaxWait = 200;
+            JoinWaitMin = 50;
+            JoinWaitVariation = 200;
             SuccessorCount = 1;
             AwaitTimeout = 200;
             AckTimeout = 50;

@@ -20,6 +20,7 @@ namespace CoreDht.Node
         private readonly MemoryBus _messageBus;
         private readonly CorrelationId _correlationId;
         private readonly Action _action;
+        private readonly int _retryMax;
         private int _retryCount;
 
         public RetryOperationHandler(MemoryBus messageBus, CorrelationId correlationId, Action action, int retryCount)
@@ -27,15 +28,20 @@ namespace CoreDht.Node
             _messageBus = messageBus;
             _correlationId = correlationId;
             _action = action;
-            _retryCount = retryCount;
+            _retryMax = retryCount == RetryCount.Infinite ? RetryCount.Infinite : Math.Max(0, retryCount);
         }
 
         public void Invoke()
         {
-            if (_retryCount >= 0)
+            if (_retryCount <= _retryMax)
             {
                 _action();
-                --_retryCount;
+                ++_retryCount;
+                _messageBus.Publish(new ScheduleRetryAction(_correlationId));
+            }
+            else if (_retryMax == RetryCount.Infinite)
+            {
+                _action();
                 _messageBus.Publish(new ScheduleRetryAction(_correlationId));
             }
             else

@@ -62,9 +62,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InlineMessageHandler.cs" />
-    <Compile Include="Messages\Internal\BeginJoin.cs" />
-    <Compile Include="Messages\Internal\EndJoin.cs" />
+    <Compile Include="Messages\Internal\BeginJoinNetwork.cs" />
+    <Compile Include="Messages\Internal\EndJoinNetwork.cs" />
     <Compile Include="Messages\Internal\ScheduleRetryAction.cs" />
+    <Compile Include="Messages\NetworkMaintenance\JoinNetwork.cs" />
+    <Compile Include="Messages\NetworkMaintenance\JoinNetworkReply.cs" />
     <Compile Include="Node.AwaitAckRetryHandler.cs" />
     <Compile Include="InlineResponseHandler.cs" />
     <Compile Include="AwaitHandler.cs" />
@@ -98,7 +100,9 @@
     <Compile Include="NodeActionScheduler.cs" />
     <Compile Include="NodeActor.cs" />
     <Compile Include="NodeConfiguration.cs" />
+    <Compile Include="NodeHandlerContext.cs" />
     <Compile Include="NodeInfo.cs" />
+    <Compile Include="Node.JoinNetworkHandler.cs" />
     <Compile Include="NodeMarshaller.cs" />
     <Compile Include="NodeMarshallerFactory.cs" />
     <Compile Include="NodeServices.cs" />

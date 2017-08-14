@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CoreDht.Node.Messages;
 using CoreDht.Node.Messages.Internal;
 using CoreDht.Utils;
 using CoreMemoryBus;
@@ -136,6 +137,7 @@ namespace CoreDht.Node
             {
                 typeof (CancelOperation),
                 typeof (OperationComplete),
+                typeof(NackMessage), // Sometimes this type is used in conjunction with the retry mechanism.
             };
 
         public void Handle(Message message)

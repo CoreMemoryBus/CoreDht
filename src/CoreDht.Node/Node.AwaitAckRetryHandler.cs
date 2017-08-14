@@ -23,7 +23,7 @@ namespace CoreDht.Node
             private readonly NodeConfiguration _config;
             private readonly Dictionary<CorrelationId, DateTime> _acks = new Dictionary<CorrelationId, DateTime>();
 
-            public AwaitAckRetryHandler(IActionScheduler actionScheduler, IExpiryTimeCalculator expiryCalculator, ICommunicationManager commMgr, Action<string> logger, NodeConfiguration config)
+            public AwaitAckRetryHandler(IActionScheduler actionScheduler, IExpiryTimeCalculator expiryCalculator, NodeHandlerContext handlerContext)
             {
                 _actionScheduler = actionScheduler;
                 _disposeAction = new DisposableAction(
@@ -31,9 +31,9 @@ namespace CoreDht.Node
                     () => { _actionScheduler.ExecuteAction -= OneExecuteAction; });
 
                 _expiryCalculator = expiryCalculator;
-                _commMgr = commMgr;
-                _config = config;
-                _logger = logger;
+                _commMgr = handlerContext.CommunicationManager;
+                _config = handlerContext.Configuration;
+                _logger = handlerContext.Logger;
             }
 
             private void OneExecuteAction(object sender, ActionSchedulerEventArgs e)

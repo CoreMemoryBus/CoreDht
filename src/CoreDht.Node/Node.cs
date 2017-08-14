@@ -48,12 +48,29 @@ namespace CoreDht.Node
             MessageBus.Subscribe(timerHandler);
             Janitor.Push(new DisposableAction(() => MessageBus.Unsubscribe(timerHandler)));
             MessageBus.Subscribe(new LifetimeHandler(this));
-            MessageBus.Subscribe(new AwaitAckRetryHandler(Scheduler, Services.ExpiryTimeCalculator, CommunicationManager, Logger, Configuration));
+            var handlercontext = CreateHandlerContext();
+            MessageBus.Subscribe(Janitor.Push(new AwaitAckRetryHandler(Scheduler, Services.ExpiryTimeCalculator, handlercontext)));
+            MessageBus.Subscribe(new JoinNetworkHandler(handlercontext));
         }
 
         protected Node(string hostAndPort, string identifier, NodeServices services)
             : this(hostAndPort, identifier, new DefaultNodeConfiguration(), services)
         { }
+
+        protected NodeHandlerContext CreateHandlerContext()
+        {
+            return new NodeHandlerContext
+            {
+                Logger = Logger,
+                Configuration = Configuration,
+                Identity = Identity,
+                CommunicationManager = CommunicationManager,
+                Scheduler = Scheduler,
+                ExpiryTimeCalculator = Services.ExpiryTimeCalculator,
+                CorrelationIdFactory = Services.CorrelationIdFactory,
+                MessageBus = MessageBus,
+            };
+        }
 
         public NodeInfo Successor
         {
@@ -69,10 +86,23 @@ namespace CoreDht.Node
         }
 
         protected virtual void Initialize()
-        { }
+        {
+            // Do stuff like calculate a seed node to join
+            // Todo: Create a list of potential known seed nodes using a multicast beacon
+        }
 
         protected virtual void OnInitialised()
-        { }
+        {
+            if (!IsSeedNode())
+            {
+                CommunicationManager.SendInternal(new BeginJoinNetwork(Configuration.SeedNodeIdentity));
+            }
+        }
+
+        private bool IsSeedNode()
+        {
+            return Identity.Identifier.Equals(Configuration.SeedNodeIdentity);
+        }
 
         public void Stop()
         {

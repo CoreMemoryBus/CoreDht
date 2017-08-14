@@ -40,9 +40,9 @@ namespace CommunicationManager
                     Console.WriteLine($"StartAt:{(int)entry.StartValue.Bytes[0]} Successor:{entry.SuccessorIdentity}");
                 }
 
-                Console.ReadKey();
-
                 nodes.ForEach(n => n.Start());
+
+                Console.ReadKey();
 
                 Console.WriteLine($"Supplying messages at:{sampleNode.Identity}");
 
