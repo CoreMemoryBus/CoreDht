@@ -74,7 +74,6 @@
     <Compile Include="IChordNode.cs" />
     <Compile Include="ICommunicationManager.cs" />
     <Compile Include="ICommunicationManagerFactory.cs" />
-    <Compile Include="IMessageBus.cs" />
     <Compile Include="INodeActor.cs" />
     <Compile Include="INodeMarshaller.cs" />
     <Compile Include="INodeMarshallerFactory.cs" />

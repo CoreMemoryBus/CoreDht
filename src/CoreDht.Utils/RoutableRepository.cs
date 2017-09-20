@@ -4,6 +4,7 @@ using CoreDht.Utils.Messages;
 using CoreMemoryBus;
 using CoreMemoryBus.Messages;
 using CoreMemoryBus.Messaging;
+using CoreMemoryBus.Handlers;
 
 namespace CoreDht.Utils
 {

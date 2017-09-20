@@ -2,6 +2,7 @@ using System;
 using CoreDht.Utils;
 using CoreMemoryBus;
 using CoreMemoryBus.Messages;
+using CoreMemoryBus.Handlers;
 
 namespace CoreDht.Node
 {

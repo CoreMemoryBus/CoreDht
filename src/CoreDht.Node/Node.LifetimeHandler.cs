@@ -1,5 +1,6 @@
 ﻿using CoreDht.Node.Messages.Internal;
 using CoreMemoryBus;
+using CoreMemoryBus.Handlers;
 
 namespace CoreDht.Node
 {

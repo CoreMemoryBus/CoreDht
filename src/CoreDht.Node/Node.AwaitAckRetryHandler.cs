@@ -5,6 +5,7 @@ using CoreDht.Node.Messages;
 using CoreDht.Node.Messages.Internal;
 using CoreDht.Utils;
 using CoreMemoryBus;
+using CoreMemoryBus.Handlers;
 
 namespace CoreDht.Node
 {

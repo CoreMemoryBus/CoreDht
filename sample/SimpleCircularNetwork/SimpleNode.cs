@@ -9,6 +9,7 @@ using CoreMemoryBus.Messaging;
 using NetMQ;
 using NetMQ.Sockets;
 using SimpleCircularNetwork.Messages;
+using CoreMemoryBus.Handlers;
 
 namespace SimpleCircularNetwork
 {

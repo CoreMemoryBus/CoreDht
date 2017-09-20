@@ -3,6 +3,7 @@ using CoreDht.Node.Messages.Internal;
 using CoreDht.Utils;
 using CoreMemoryBus;
 using NetMQ;
+using CoreMemoryBus.Handlers;
 
 namespace CoreDht.Node
 {

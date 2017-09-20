@@ -10,6 +10,7 @@ using NetMQ;
 using NetMQ.Sockets;
 using SimpleNetworkCommon;
 using SimpleNetworkCommon.Messages;
+using CoreMemoryBus.Handlers;
 
 namespace SimpleChordNetwork
 {
