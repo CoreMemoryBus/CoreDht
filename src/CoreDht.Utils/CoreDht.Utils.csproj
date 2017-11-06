@@ -34,15 +34,14 @@
       <HintPath>..\..\packages\Base58Check.0.2.0\lib\Net40\Base58Check.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CoreMemoryBus, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CoreMemoryBus.2.0.2\lib\net461\CoreMemoryBus.dll</HintPath>
+    <Reference Include="CoreMemoryBus, Version=2.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CoreMemoryBus.2.0.8\lib\net461\CoreMemoryBus.dll</HintPath>
     </Reference>
-    <Reference Include="CoreMemoryBus.Messages, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CoreMemoryBus.Messages.2.0.2\lib\net461\CoreMemoryBus.Messages.dll</HintPath>
+    <Reference Include="CoreMemoryBus.Messages, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CoreMemoryBus.Messages.2.0.3\lib\net461\CoreMemoryBus.Messages.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

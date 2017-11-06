@@ -30,14 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AsyncIO">
-      <HintPath>..\..\packages\AsyncIO.0.1.26.0\lib\net40\AsyncIO.dll</HintPath>
+    <Reference Include="AsyncIO, Version=0.0.0.0, Culture=neutral, PublicKeyToken=44a94435bd6f33f8, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AsyncIO.0.1.40\lib\net40\AsyncIO.dll</HintPath>
     </Reference>
-    <Reference Include="CoreMemoryBus">
-      <HintPath>..\..\packages\CoreMemoryBus.1.0.7.292\lib\net452\CoreMemoryBus.dll</HintPath>
+    <Reference Include="CoreMemoryBus, Version=2.0.8.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CoreMemoryBus.2.0.8\lib\net461\CoreMemoryBus.dll</HintPath>
     </Reference>
-    <Reference Include="CoreMemoryBus.Messages">
-      <HintPath>..\..\packages\CoreMemoryBus.Messages.1.0.5.182\lib\net45\CoreMemoryBus.Messages.dll</HintPath>
+    <Reference Include="CoreMemoryBus.Messages, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CoreMemoryBus.Messages.2.0.3\lib\net461\CoreMemoryBus.Messages.dll</HintPath>
     </Reference>
     <Reference Include="NetMQ">
       <HintPath>..\..\packages\NetMQ.4.0.0.1\lib\net40\NetMQ.dll</HintPath>
@@ -63,6 +63,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
