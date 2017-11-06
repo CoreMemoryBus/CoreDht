@@ -58,17 +58,11 @@ namespace CoreDht.Node
 
         protected struct NoLockingStrategy : ILockingStrategy
         {
-            public void Dispose()
-            {
-            }
+            public void Dispose() {}
 
-            public void Lock()
-            {
-            }
+            public void Lock() {}
 
-            public void Unlock()
-            {
-            }
+            public void Unlock() {}
         }
 
         #endregion

@@ -11,6 +11,9 @@ namespace CommunicationManager
         public AnimalNode(string hostAndPort, string identifier, NodeServices services)
             : base(hostAndPort, identifier, services)
         {
+            // We'll suppress the autojoin behaviour for the demo as we're building the network manually
+            Configuration.SeedNodeIdentity = Identity;
+
             _repository = new AnimalRepository(services.Logger);
             MessageBus.Subscribe(_repository);
         }
