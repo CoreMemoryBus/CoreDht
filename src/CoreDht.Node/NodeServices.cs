@@ -21,6 +21,7 @@ namespace CoreDht.Node
         public IConsistentHashingService ConsistentHashingService { get; set; }
 
         public ICommunicationManagerFactory CommunicationManagerFactory { get; set; }
+
         public IActionTimerFactory TimerFactory { get; set; }
         /// <summary>
         /// The ExpiryTimeCalculator is used to calculate the expiry time of events and ephemeral messages.
@@ -50,6 +51,7 @@ namespace CoreDht.Node
             CorrelationIdFactory = new CorrelationIdFactory();
             RandomNumberGenerator = new RandomNumberGenerator(CorrelationIdFactory);
             ExpiryTimeCalculator = new ExpiryTimeCalculator(Clock, RandomNumberGenerator);
+            CommunicationManagerFactory = new CommunicationManagerFactory(new NodeMarshallerFactory(new MessageSerializer()));
             MessageBusFactory = new MessageBusFactory();
         }
     }
