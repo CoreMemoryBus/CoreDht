@@ -18,13 +18,13 @@ namespace CoreDht.Node
     public class RetryOperationHandler
         : IHandle<NackMessage>
     {
-        private readonly MemoryBus _messageBus;
+        private readonly IMessageBus _messageBus;
         private readonly CorrelationId _correlationId;
         private readonly Action _action;
         private readonly int _retryMax;
         private int _retryCount;
 
-        public RetryOperationHandler(MemoryBus messageBus, CorrelationId correlationId, Action action, int retryCount)
+        public RetryOperationHandler(IMessageBus messageBus, CorrelationId correlationId, Action action, int retryCount)
         {
             _messageBus = messageBus;
             _correlationId = correlationId;

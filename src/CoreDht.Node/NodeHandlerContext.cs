@@ -13,6 +13,6 @@ namespace CoreDht.Node
         public IActionScheduler Scheduler { get; set; }
         public IExpiryTimeCalculator ExpiryTimeCalculator { get; set; }
         public ICorrelationIdFactory CorrelationIdFactory { get; set; }
-        public MemoryBus MessageBus { get; set; }
+        public IMessageBus MessageBus { get; set; }
     }
 }

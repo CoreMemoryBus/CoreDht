@@ -3,6 +3,7 @@ using CoreDht.Utils.Hashing;
 using CoreMemoryBus;
 using CoreMemoryBus.Messaging;
 using SimpleNetworkCommon.Messages;
+using CoreMemoryBus.Handlers;
 
 namespace SimpleNetworkCommon
 {

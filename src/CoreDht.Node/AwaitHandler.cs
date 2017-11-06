@@ -9,10 +9,10 @@ namespace CoreDht.Node
     /// </summary>
     public class AwaitHandler
     {
-        protected readonly MemoryBus MessageBus;
+        protected readonly IMessageBus MessageBus;
         protected readonly Action<string> Logger;
 
-        protected AwaitHandler(MemoryBus messageBus, Action<string> logger)
+        protected AwaitHandler(IMessageBus messageBus, Action<string> logger)
         {
             MessageBus = messageBus;
             Logger = logger;

@@ -28,7 +28,7 @@ namespace CoreDht.Node
         private CorrelationId _parentCorrelation;
         private readonly Dictionary<CorrelationId, IResponseAction> _responseActions = new Dictionary<CorrelationId, IResponseAction>();
 
-        public InlineResponseHandler(MemoryBus messageBus, Action<string> logger)
+        public InlineResponseHandler(IMessageBus messageBus, Action<string> logger)
             : base(messageBus, logger)
         {}
 

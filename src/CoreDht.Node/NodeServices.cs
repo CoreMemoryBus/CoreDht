@@ -36,6 +36,8 @@ namespace CoreDht.Node
         /// by introducing an element of random behaviour.
         /// </summary>
         public IRandomNumberGenerator RandomNumberGenerator { get; set; }
+
+        public IMessageBusFactory MessageBusFactory { get; set; }
     }
 
     public class DefaultNodeServices : NodeServices
@@ -48,6 +50,7 @@ namespace CoreDht.Node
             CorrelationIdFactory = new CorrelationIdFactory();
             RandomNumberGenerator = new RandomNumberGenerator(CorrelationIdFactory);
             ExpiryTimeCalculator = new ExpiryTimeCalculator(Clock, RandomNumberGenerator);
+            MessageBusFactory = new MessageBusFactory();
         }
     }
 

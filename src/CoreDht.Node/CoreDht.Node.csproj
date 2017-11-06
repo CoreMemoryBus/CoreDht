@@ -57,7 +57,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IMessageBusFactory.cs" />
     <Compile Include="InlineMessageHandler.cs" />
+    <Compile Include="MessageBusFactory.cs" />
     <Compile Include="Messages\Internal\BeginJoinNetwork.cs" />
     <Compile Include="Messages\Internal\EndJoinNetwork.cs" />
     <Compile Include="Messages\Internal\ScheduleRetryAction.cs" />

@@ -19,7 +19,7 @@ namespace CoreDht.Node
         protected NodeActor Actor { get; }
         public NodeInfo Identity { get; private set; }
         public NodeInfo Predecessor { get; private set; }
-        protected MemoryBus MessageBus { get; }
+        protected IMessageBus MessageBus { get; }
         private SocketCache ForwardingSockets { get; }
         protected ICommunicationManager CommunicationManager { get; }
         protected SuccessorTable Successors { get; }
@@ -41,7 +41,7 @@ namespace CoreDht.Node
             ListeningSocket = Janitor.Push(Services.SocketFactory.CreateBindingSocket(hostAndPort));
             Actor = Janitor.Push(new NodeActor(ListeningSocket, OnReceiveMsg, (socket, ex) => {}));
             ForwardingSockets = Janitor.Push(new SocketCache(services.SocketFactory, Clock));
-            MessageBus = new MemoryBus();
+            MessageBus = Janitor.Push(Services.MessageBusFactory.Create());
             CommunicationManager = Services.CommunicationManagerFactory.Create(this, ForwardingSockets, MessageBus);
             Scheduler = Janitor.Push(new NodeActionScheduler(Clock, services.TimerFactory.CreateTimer(), CommunicationManager));
             var timerHandler = Janitor.Push(Scheduler.CreateTimerHandler());
