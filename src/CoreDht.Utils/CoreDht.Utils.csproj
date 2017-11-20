@@ -65,6 +65,10 @@
     <Compile Include="Hashing\ConsistentHash.cs" />
     <Compile Include="DnsProvider.cs" />
     <Compile Include="Hashing\ConsistentHashingService.cs" />
+    <Compile Include="Hashing\HMACHashingService.cs" />
+    <Compile Include="Hashing\HMACMD5HashingService.cs" />
+    <Compile Include="Hashing\HMACSHA1HashingService.cs" />
+    <Compile Include="Hashing\HMACSHA256HashingService.cs" />
     <Compile Include="Hashing\IConsistentHashingService.cs" />
     <Compile Include="Hashing\Md5HashingService.cs" />
     <Compile Include="Hashing\Sha1HashingService.cs" />
