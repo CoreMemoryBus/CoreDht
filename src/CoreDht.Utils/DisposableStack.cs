@@ -20,6 +20,16 @@ namespace CoreDht.Utils
             return newObject;
         }
 
+        public IDisposable Push(Action disposeAction)
+        {
+            return Push(new DisposableAction(disposeAction));
+        }
+
+        public IDisposable Push(Action initAction, Action disposeAction)
+        {
+            return Push(new DisposableAction(initAction, disposeAction));
+        }
+
         #region IDisposable Support
 
         private bool isDisposed = false;
