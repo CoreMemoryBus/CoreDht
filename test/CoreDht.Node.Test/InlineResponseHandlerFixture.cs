@@ -25,7 +25,7 @@ namespace CoreDht.Node.Test
             Assert.That(counter, Is.EqualTo(1));
         }
 
-        public class TestOperation : Message, ICorrelatedMessage<CorrelationId>
+        public class TestOperation : Message, ICorrelatedNodeMessage
         {
             public TestOperation(CorrelationId correlationId)
             {
@@ -35,7 +35,7 @@ namespace CoreDht.Node.Test
             public CorrelationId CorrelationId { get; }
         }
 
-        public class TestResponse : Message, ICorrelatedMessage<CorrelationId>
+        public class TestResponse : Message, ICorrelatedNodeMessage
         {
             public TestResponse(CorrelationId correlationId)
             {

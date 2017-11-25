@@ -3,7 +3,7 @@ using CoreMemoryBus.Messages;
 
 namespace CoreDht.Node.Messages.Internal
 {
-    public class AwaitWithTimeoutMessage : Message, ICorrelatedMessage<CorrelationId>
+    public class AwaitWithTimeoutMessage : Message, ICorrelatedNodeMessage
     {
         public AwaitWithTimeoutMessage(CorrelationId correlationId)
         {

@@ -12,7 +12,7 @@ namespace CoreDht.Node
     /// <typeparam name="TMessage"></typeparam>
     public class InlineMessageHandler<TMessage>
         : IHandle<TMessage>
-        where TMessage : ICorrelatedMessage<CorrelationId>
+        where TMessage : ICorrelatedNodeMessage
     {
         private readonly CorrelationId _correlationId;
         private readonly Action _response;
@@ -25,7 +25,7 @@ namespace CoreDht.Node
 
         public void Handle(TMessage message)
         {
-            var correlatedMessage = message as ICorrelatedMessage<CorrelationId>;
+            var correlatedMessage = message as ICorrelatedNodeMessage;
             if (correlatedMessage != null && correlatedMessage.CorrelationId.Equals(_correlationId))
             {
                 _response();

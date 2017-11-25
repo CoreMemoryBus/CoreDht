@@ -51,7 +51,7 @@ namespace CoreDht.Node
         /// <param name="responseCallback"></param>
         /// <returns></returns>
         public InlineResponseHandler AndAwait<TResponse>(CorrelationId correlationId, Action<TResponse> responseCallback)
-            where TResponse : Message, ICorrelatedMessage<CorrelationId>
+            where TResponse : Message, ICorrelatedNodeMessage
         {
             _responseActions[correlationId] = new ResponseAction<TResponse>(responseCallback);
             Logger?.Invoke($"Awaiting {typeof(TResponse).Name} Id:{correlationId}");
@@ -68,7 +68,7 @@ namespace CoreDht.Node
         /// <param name="responseCallback"></param>
         /// <returns></returns>
         public InlineResponseHandler AndAwaitAll<TResponse>(CorrelationId[] correlationIds, Action<TResponse> responseCallback)
-            where TResponse : Message, ICorrelatedMessage<CorrelationId>
+            where TResponse : Message, ICorrelatedNodeMessage
         {
             foreach (var correlationId in correlationIds)
             {
@@ -145,7 +145,7 @@ namespace CoreDht.Node
         {
             if (!IgnoreTypes.Contains(message.GetType()))
             {
-                var correlatedMessage = message as ICorrelatedMessage<CorrelationId>;
+                var correlatedMessage = message as ICorrelatedNodeMessage;
                 if (correlatedMessage != null)
                 {
                     IResponseAction response;

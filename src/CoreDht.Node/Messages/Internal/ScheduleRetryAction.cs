@@ -3,7 +3,7 @@ using CoreMemoryBus.Messages;
 
 namespace CoreDht.Node.Messages.Internal
 {
-    public class ScheduleRetryAction : Message, ICorrelatedMessage<CorrelationId>
+    public class ScheduleRetryAction : Message, ICorrelatedNodeMessage>
     {
         public ScheduleRetryAction(CorrelationId correlationId)
         {

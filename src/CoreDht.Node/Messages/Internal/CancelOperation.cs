@@ -3,7 +3,7 @@ using CoreMemoryBus.Messages;
 
 namespace CoreDht.Node.Messages.Internal
 {
-    public class CancelOperation : Message, ICorrelatedMessage<CorrelationId>
+    public class CancelOperation : Message, ICorrelatedNodeMessage
     {
         public CancelOperation(CorrelationId correlationId)
         {
