@@ -3,7 +3,7 @@ using CoreMemoryBus.Messages;
 
 namespace CoreDht.Node.Messages.Internal
 {
-    public class OperationComplete : Message, ICorrelatedMessage<CorrelationId>
+    public class OperationComplete : Message, ICorrelatedNodeMessage
     {
         public OperationComplete(CorrelationId correlationId)
         {
