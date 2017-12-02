@@ -3,6 +3,7 @@ using CoreDht.Utils;
 using CoreMemoryBus;
 using CoreMemoryBus.Messages;
 using CoreMemoryBus.Handlers;
+using CoreDht.Node.Messages;
 
 namespace CoreDht.Node
 {
@@ -25,8 +26,8 @@ namespace CoreDht.Node
 
         public void Handle(TMessage message)
         {
-            var correlatedMessage = message as ICorrelatedNodeMessage;
-            if (correlatedMessage != null && correlatedMessage.CorrelationId.Equals(_correlationId))
+            if (message is ICorrelatedNodeMessage correlatedMessage && 
+                correlatedMessage.CorrelationId.Equals(_correlationId))
             {
                 _response();
             }
