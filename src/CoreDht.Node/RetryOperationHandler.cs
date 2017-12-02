@@ -13,10 +13,12 @@ namespace CoreDht.Node
     /// RetryOperationHandler maintains an internal retry count and interacts with the action scheduler to perform the supplied
     /// action at some future time. A NackMessage is employed exclusively to indicate that an operation should be retried at some future time.
     /// RetryOperationHandler will handle the NackMessage and schedule a retry action.
+    /// If an AckMessage is received for a retryable operation, no further retries will be attempted.
     /// Reminder: the number of actual attempts is 1 + retry count.
     /// </summary>
     public class RetryOperationHandler
         : IHandle<NackMessage>
+        , IHandle<AckMessage>
     {
         private readonly IMessageBus _messageBus;
         private readonly CorrelationId _correlationId;
@@ -38,17 +40,27 @@ namespace CoreDht.Node
             {
                 _action();
                 ++_retryCount;
-                _messageBus.Publish(new ScheduleRetryAction(_correlationId));
+                ScheduleRetry();
             }
             else if (_retryMax == RetryCount.Infinite)
             {
                 _action();
-                _messageBus.Publish(new ScheduleRetryAction(_correlationId));
+                ScheduleRetry();
             }
             else
             {
-                _messageBus.Unsubscribe(this);
+                Terminate();
             }
+        }
+
+        private void ScheduleRetry()
+        {
+            _messageBus.Publish(new ScheduleRetryAction(_correlationId));
+        }
+
+        public void Terminate()
+        {
+            _messageBus.Unsubscribe(this);
         }
 
         public void Handle(NackMessage message)
@@ -56,6 +68,14 @@ namespace CoreDht.Node
             if (message.CorrelationId.Equals(_correlationId))
             {
                 Invoke();
+            }
+        }
+
+        public void Handle(AckMessage message)
+        {
+            if (message.CorrelationId.Equals(_correlationId))
+            {
+                Terminate();
             }
         }
     }
