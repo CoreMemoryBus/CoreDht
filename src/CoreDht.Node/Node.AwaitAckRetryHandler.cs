@@ -40,8 +40,7 @@ namespace CoreDht.Node
             private void OneExecuteAction(object sender, ActionSchedulerEventArgs e)
             {
                 // Decide if we should execute the action or reschedule to a new time.
-                var context = e.State as Context;
-                if (context != null)
+                if (e.State is Context context)
                 {
                     var correlation = context.CorrelationId;
 
