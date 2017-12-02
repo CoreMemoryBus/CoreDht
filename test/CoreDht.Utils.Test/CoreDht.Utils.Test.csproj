@@ -33,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoreMemoryBus, Version=2.0.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CoreMemoryBus.2.0.8\lib\net461\CoreMemoryBus.dll</HintPath>
+    <Reference Include="CoreMemoryBus, Version=2.0.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CoreMemoryBus.2.0.9\lib\net461\CoreMemoryBus.dll</HintPath>
     </Reference>
     <Reference Include="CoreMemoryBus.Messages, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CoreMemoryBus.Messages.2.0.3\lib\net461\CoreMemoryBus.Messages.dll</HintPath>
