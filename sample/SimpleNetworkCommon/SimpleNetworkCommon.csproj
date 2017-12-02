@@ -30,11 +30,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AsyncIO, Version=0.1.25.0, Culture=neutral, PublicKeyToken=44a94435bd6f33f8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AsyncIO.0.1.26.0\lib\net40\AsyncIO.dll</HintPath>
+    <Reference Include="AsyncIO, Version=0.0.0.0, Culture=neutral, PublicKeyToken=44a94435bd6f33f8, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AsyncIO.0.1.40\lib\net40\AsyncIO.dll</HintPath>
     </Reference>
-    <Reference Include="CoreMemoryBus, Version=2.0.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CoreMemoryBus.2.0.8\lib\net461\CoreMemoryBus.dll</HintPath>
+    <Reference Include="CoreMemoryBus, Version=2.0.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CoreMemoryBus.2.0.9\lib\net461\CoreMemoryBus.dll</HintPath>
     </Reference>
     <Reference Include="CoreMemoryBus.Messages, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CoreMemoryBus.Messages.2.0.3\lib\net461\CoreMemoryBus.Messages.dll</HintPath>
